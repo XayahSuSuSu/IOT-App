@@ -1,55 +1,69 @@
+import { getLatestData } from '@/api/api'
+import { mdiAirHumidifier, mdiAlarmLight, mdiTemperatureCelsius, mdiUpdate } from '@mdi/js'
+
+const gradients = [
+  ['#222'],
+  ['#42b3f4'],
+  ['red', 'orange', 'yellow'],
+  ['purple', 'violet'],
+  ['#00c6ff', '#F0F', '#FF0'],
+  ['#f72047', '#ffd200', '#1feaea'],
+]
+
 export default {
   name: 'Index',
   data: () => ({
-    ecosystem: [
+    sparklines: {
+      width: 2,
+      radius: 10,
+      gradient: gradients[5],
+      value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+      gradients,
+    },
+    stateData: [
       {
-        text: 'vuetify-loader',
-        href: 'https://github.com/vuetifyjs/vuetify-loader',
+        title: '温度',
+        total: 0,
+        icon: mdiTemperatureCelsius,
+        color: 'success'
       },
       {
-        text: 'github',
-        href: 'https://github.com/vuetifyjs/vuetify',
+        title: '湿度',
+        total: 0,
+        icon: mdiAirHumidifier,
+        color: 'primary'
       },
       {
-        text: 'awesome-vuetify',
-        href: 'https://github.com/vuetifyjs/awesome-vuetify',
-      },
-    ],
-    importantLinks: [
-      {
-        text: 'Documentation',
-        href: 'https://vuetifyjs.com',
+        title: '光照',
+        total: 0,
+        icon: mdiAlarmLight,
+        color: 'warning'
       },
       {
-        text: 'Chat',
-        href: 'https://community.vuetifyjs.com',
-      },
-      {
-        text: 'Made with Vuetify',
-        href: 'https://madewithvuejs.com/vuetify',
-      },
-      {
-        text: 'Twitter',
-        href: 'https://twitter.com/vuetifyjs',
-      },
-      {
-        text: 'Articles',
-        href: 'https://medium.com/vuetify',
-      },
-    ],
-    whatsNext: [
-      {
-        text: 'Explore components',
-        href: 'https://vuetifyjs.com/components/api-explorer',
-      },
-      {
-        text: 'Select a layout',
-        href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-      },
-      {
-        text: 'Frequently Asked Questions',
-        href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
+        title: '更新',
+        total: 0,
+        icon: mdiUpdate,
+        color: 'info'
       },
     ],
   }),
+  methods: {
+    getLatestData () {
+      getLatestData().then(res => {
+        const dataRes = JSON.parse(JSON.stringify(res.data.data))
+        this.stateData[0].total = dataRes.temp
+        this.stateData[1].total = dataRes.humi
+        this.stateData[2].total = dataRes.lum
+        this.stateData[3].total = new Date().toLocaleString()
+        console.log(dataRes)
+      })
+    }
+  },
+  created () {
+    setInterval(() => {
+      setTimeout(() => {
+        this.getLatestData()
+      }, 0)
+    }, 2000)
+  }
 }
