@@ -1,6 +1,6 @@
 import pymysql
 
-HOST = 'localhost'  # 宿主机地址
+HOST = 'db'  # 宿主机地址
 USER = 'root'  # 用户名
 PASSWORD = '123456'  # 密码
 DB = 'iotapp'  # 数据库名
