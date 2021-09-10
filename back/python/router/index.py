@@ -139,3 +139,37 @@ def finish():
             'code': -1,
             'message': '参数错误',
         }
+
+
+@iot.route('/api/v2/polling', methods=['POST'])
+def polling():
+    try:
+        if request.method == 'POST':
+            # null or temp=20&humi=0.8&lum=400
+            form = request.form.to_dict()
+            if form != {}:
+                _db.insert('data', {
+                    'temp': form['temp'],
+                    'humi': form['humi'],
+                    'lum': form['lum']
+                })
+            res = {
+                'code': 1,
+                'data': [],
+            }
+            data = _db.get_all('control')
+            for i in data:
+                if i['state'] == 0:
+                    res['data'].append({
+                        'id': i['id'],
+                        'obj': i['obj'],
+                        'action': i['action'],
+                        'state': i['state'],
+                    })
+            return res
+    except KeyError:
+        print(KeyError)
+        return {
+            'code': -1,
+            'message': '参数错误',
+        }
