@@ -13,6 +13,7 @@ const gradients = [
 export default {
   name: 'Index',
   data: () => ({
+    stateSwitcher: true,
     sparklines: {
       width: 2,
       radius: 10,
@@ -49,14 +50,18 @@ export default {
   }),
   methods: {
     getLatestData () {
-      getLatestData().then(res => {
-        const dataRes = JSON.parse(JSON.stringify(res.data.data))
-        this.stateData[0].total = dataRes.temp
-        this.stateData[1].total = dataRes.humi
-        this.stateData[2].total = dataRes.lum
-        this.stateData[3].total = new Date().toLocaleString()
-        console.log(dataRes)
-      })
+      if (this.stateSwitcher) {
+        getLatestData().then(res => {
+          const dataRes = JSON.parse(JSON.stringify(res.data.data))
+          this.stateData[0].total = dataRes.temp
+          this.stateData[1].total = dataRes.humi
+          this.stateData[2].total = dataRes.lum
+          this.stateData[3].total = new Date().toLocaleString()
+          console.log(dataRes)
+        })
+      } else {
+        this.stateData[3].total = '已停止更新'
+      }
     }
   },
   created () {

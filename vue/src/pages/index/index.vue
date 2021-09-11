@@ -3,6 +3,11 @@
     <v-card class="v-card-common mt-10">
       <v-card-title>实时状态</v-card-title>
       <v-card-subtitle>更新频率:2s</v-card-subtitle>
+      <v-switch
+          style="position: absolute;right: 0;top: 0"
+          v-model="stateSwitcher"
+          inset
+      ></v-switch>
       <v-card-text>
         <v-row>
           <v-col
