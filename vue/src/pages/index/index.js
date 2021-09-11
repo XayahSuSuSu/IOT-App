@@ -1,4 +1,4 @@
-import { getLatestData } from '@/api/api'
+import { getAllData, getLatestData } from '@/api/api'
 import { mdiAirHumidifier, mdiAlarmLight, mdiTemperatureCelsius, mdiUpdate } from '@mdi/js'
 
 const gradients = [
@@ -13,12 +13,19 @@ const gradients = [
 export default {
   name: 'Index',
   data: () => ({
-    stateSwitcher: true,
+    stateSwitcher: false,
     sparklines: {
+      type: ['temp', 'humi', 'lum'],
+      typeCN: ['温度', '湿度', '光照'],
+      typeIndex: 0,
       width: 2,
       radius: 10,
       gradient: gradients[5],
-      value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+      value: {
+        'temp': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'humi': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        'lum': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      },
       gradients,
     },
     stateData: [
@@ -62,6 +69,25 @@ export default {
       } else {
         this.stateData[3].total = '已停止更新'
       }
+    },
+    changeType () {
+      this.sparklines.typeIndex = (this.sparklines.typeIndex + 1) % 3
+    },
+    getAllData () {
+      getAllData().then(res => {
+        const dataRes = JSON.parse(JSON.stringify(res.data.data))
+        this.sparklines.value.temp = []
+        this.sparklines.value.humi = []
+        this.sparklines.value.lum = []
+        if (dataRes.length > 10) {
+          for (let i = dataRes.length - 1; i > dataRes.length - 11; i--) {
+            this.sparklines.value.temp.push(dataRes[i]['temp'])
+            this.sparklines.value.humi.push(dataRes[i]['humi'])
+            this.sparklines.value.lum.push(dataRes[i]['lum'])
+          }
+        }
+        console.log(dataRes)
+      })
     }
   },
   created () {
@@ -70,5 +96,6 @@ export default {
         this.getLatestData()
       }, 0)
     }, 2000)
+    this.getAllData()
   }
 }

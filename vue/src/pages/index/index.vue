@@ -53,10 +53,17 @@
       </v-card-actions>
     </v-card>
     <v-card class="v-card-common mt-10 mb-10">
-      <v-card-title>数据变化</v-card-title>
-      <v-card-subtitle>上次更新: 30秒前</v-card-subtitle>
+      <v-card-title>数据变化 - {{ sparklines.typeCN[sparklines.typeIndex] }}</v-card-title>
+      <v-card-subtitle>
+        <div>
+          上次更新: 30秒前
+        </div>
+        <div>
+          仅展示最新10条数据
+        </div>
+      </v-card-subtitle>
       <v-sparkline
-          :value="sparklines.value"
+          :value="sparklines.value[sparklines.type[sparklines.typeIndex]]"
           :gradient="sparklines.gradient"
           :smooth="sparklines.radius || false"
           :line-width="sparklines.width"
@@ -74,8 +81,9 @@
         </v-btn>
         <v-btn
             color="deep-purple accent-4"
+            @click="changeType"
             text>
-          查看历史数据
+          更换数据类型
         </v-btn>
       </v-card-actions>
     </v-card>
