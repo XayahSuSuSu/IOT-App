@@ -1,5 +1,5 @@
 import { getAllData, getLatestData } from '@/api/api'
-import { mdiAirHumidifier, mdiAlarmLight, mdiTemperatureCelsius, mdiUpdate } from '@mdi/js'
+import { mdiAirHumidifier, mdiAlarmLight, mdiResistorNodes, mdiServer, mdiTemperatureCelsius, mdiUpdate } from '@mdi/js'
 
 const gradients = [
   ['#222'],
@@ -28,6 +28,20 @@ export default {
       },
       gradients,
     },
+    serverData: [
+      {
+        title: '服务器',
+        total: '正常',
+        icon: mdiServer,
+        color: 'grey'
+      },
+      {
+        title: '终端',
+        total: '正常',
+        icon: mdiResistorNodes,
+        color: 'red'
+      },
+    ],
     stateData: [
       {
         title: '温度',
@@ -63,11 +77,17 @@ export default {
           this.stateData[0].total = dataRes.temp
           this.stateData[1].total = dataRes.humi
           this.stateData[2].total = dataRes.lum
-          this.stateData[3].total = new Date().toLocaleString()
+          this.stateData[3].total = new Date().toLocaleTimeString()
           console.log(dataRes)
+          this.sparklines.value.temp.splice(1, 1)
+          this.sparklines.value.temp.push(dataRes.temp)
+          this.sparklines.value.humi.splice(1, 1)
+          this.sparklines.value.humi.push(dataRes.humi)
+          this.sparklines.value.lum.splice(1, 1)
+          this.sparklines.value.lum.push(dataRes.lum)
         })
       } else {
-        this.stateData[3].total = '已停止更新'
+        // this.stateData[3].total = '已停止更新'
       }
     },
     changeType () {
@@ -96,6 +116,6 @@ export default {
         this.getLatestData()
       }, 0)
     }, 2000)
-    this.getAllData()
+    // this.getAllData()
   }
 }
