@@ -1,3 +1,5 @@
+import datetime
+
 import pymysql
 
 HOST = 'db'  # 宿主机地址
@@ -30,11 +32,15 @@ def init():
     # 创建数据表
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,"
+        "created_at timestamp,"
+        "updated_at timestamp,"
         "temp float,"
         "humi float,"
         "lum float);".format(TABLE_DATA))
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,"
+        "created_at timestamp,"
+        "updated_at timestamp,"
         "obj text,"
         "action tinyint,"
         "state tinyint);".format(TABLE_CONTROL))
@@ -47,18 +53,30 @@ def insert(table, data):
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
     if table == TABLE_DATA:
-        cursor.execute("INSERT INTO {} VALUES (0,{},{},{})".format(table, data['temp'], data['humi'], data['lum']))
+        cursor.execute(
+            "INSERT INTO {} VALUES (0,'{}','{}',{},{},{})".format(table,
+                                                                  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                                                  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                                                  data['temp'], data['humi'], data['lum']))
     elif table == TABLE_CONTROL:
-        cursor.execute("INSERT INTO {} VALUES (0,'{}',{},{})".format(table, data['obj'], data['action'], 0))
+        cursor.execute(
+            "INSERT INTO {} VALUES (0,'{}','{}','{}',{},{})".format(table,
+                                                                    datetime.datetime.now().strftime(
+                                                                        "%Y-%m-%d %H:%M:%S"),
+                                                                    datetime.datetime.now().strftime(
+                                                                        "%Y-%m-%d %H:%M:%S"),
+                                                                    data['obj'], data['action'], 0))
     db.commit()
     db.close()
 
 
 def update(table, id):
-    """插入一条记录"""
+    """更新一条记录"""
     db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
-    cursor.execute("update {} set state = {} where id = {}".format(table, 1, id))
+    cursor.execute(
+        "update {} set state = {},updated_at {} where id = {}".format(table, 1, datetime.datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"), id))
     db.commit()
     db.close()

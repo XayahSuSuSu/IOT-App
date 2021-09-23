@@ -40,6 +40,8 @@ def data():
                 for i in data:
                     res['data'].append({
                         'id': i['id'],
+                        'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
+                        'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
                         'temp': i['temp'],
                         'humi': i['humi'],
                         'lum': i['lum'],
@@ -51,6 +53,8 @@ def data():
                 else:
                     res['data'] = {
                         'id': data[len(data) - 1]['id'],
+                        'created_at': data[len(data) - 1]['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
+                        'updated_at': data[len(data) - 1]['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
                         'temp': data[len(data) - 1]['temp'],
                         'humi': data[len(data) - 1]['humi'],
                         'lum': data[len(data) - 1]['lum'],
@@ -92,6 +96,8 @@ def control():
                 for i in data:
                     res['data'].append({
                         'id': i['id'],
+                        'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
+                        'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
                         'obj': i['obj'],
                         'action': i['action'],
                         'state': i['state'],
@@ -102,6 +108,8 @@ def control():
                     if i['state'] == 0:
                         res['data'].append({
                             'id': i['id'],
+                            'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
+                            'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
                             'obj': i['obj'],
                             'action': i['action'],
                             'state': i['state'],
@@ -112,6 +120,8 @@ def control():
                     if i['state'] == 1:
                         res['data'].append({
                             'id': i['id'],
+                            'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
+                            'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
                             'obj': i['obj'],
                             'action': i['action'],
                             'state': i['state'],
@@ -165,6 +175,8 @@ def polling():
                 if i['state'] == 0:
                     res['data'].append({
                         'id': i['id'],
+                        'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
+                        'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
                         'obj': i['obj'],
                         'action': i['action'],
                         'state': i['state'],
