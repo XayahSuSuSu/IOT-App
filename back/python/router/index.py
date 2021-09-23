@@ -46,12 +46,15 @@ def data():
                     })
             if args['get'] == 'latest':
                 # /api/v1/data?get=latest
-                res['data'] = {
-                    'id': data[len(data) - 1]['id'],
-                    'temp': data[len(data) - 1]['temp'],
-                    'humi': data[len(data) - 1]['humi'],
-                    'lum': data[len(data) - 1]['lum'],
-                }
+                if len(data) == 0:
+                    res['data'] = '没有数据'
+                else:
+                    res['data'] = {
+                        'id': data[len(data) - 1]['id'],
+                        'temp': data[len(data) - 1]['temp'],
+                        'humi': data[len(data) - 1]['humi'],
+                        'lum': data[len(data) - 1]['lum'],
+                    }
             return res
     except KeyError:
         return {
