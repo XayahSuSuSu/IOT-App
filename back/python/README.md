@@ -32,7 +32,7 @@ docker build -t 'flask' .  # 在后端源码根目录下运行
 docker run -itd --name flask-test -p 3307:3307 --link mysql-test:db flask
 ```
 
-## 三、访问后端页面
+## 三、访问后端页面(初始化数据库)
 
 1. 浏览器打开 http://localhost:3307/
 
