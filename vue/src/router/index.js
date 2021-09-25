@@ -7,5 +7,6 @@ export default new Router({
     routes: [
         {path: '/', name: 'Index', component: () => import('@/pages/index/index.vue')},
         {path: '/historyData', name: 'HistoryData', component: () => import('@/pages/historyData/index.vue')},
+        {path: '/controlCenter', name: 'ControlCenter', component: () => import('@/pages/controlCenter/index.vue')},
     ]
 })

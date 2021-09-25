@@ -51,7 +51,7 @@
             </v-list-item-content>
           </v-list-item>
           <v-list-item
-              to="/index"
+              to="/controlCenter"
               link>
             <v-list-item-icon>
               <v-icon>mdi-file</v-icon>

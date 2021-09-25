@@ -93,6 +93,11 @@ export default {
             this.$router.push({
                 name: 'HistoryData'
             })
+        },
+        goToControlCenter() {
+            this.$router.push({
+                name: 'ControlCenter'
+            })
         }
     },
     created() {

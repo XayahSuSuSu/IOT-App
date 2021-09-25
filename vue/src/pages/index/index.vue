@@ -105,6 +105,12 @@
                 text>
               查看历史数据
             </v-btn>
+            <v-btn
+                color="deep-purple accent-4"
+                @click="goToControlCenter"
+                text>
+              控制终端
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
