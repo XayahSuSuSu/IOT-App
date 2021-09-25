@@ -29,7 +29,6 @@
       <v-list expand shaped class="pr-5">
         <v-list-item-group
             v-model="selected"
-            @click="test"
             color="primary">
           <v-list-item
               to="/"
@@ -39,6 +38,16 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>实时数据</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+              to="/historyData"
+              link>
+            <v-list-item-icon>
+              <v-icon>mdi-history</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>历史记录</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item
@@ -64,17 +73,13 @@
 
 export default {
   name: 'App',
-  data () {
+  data() {
     return {
       drawer: false,
       selected: 0,
     }
   },
-  methods: {
-    test () {
-      console.log(this.selected)
-    }
-  }
+  methods: {}
 }
 </script>
 <style lang="less" scoped>

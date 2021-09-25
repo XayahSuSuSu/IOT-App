@@ -101,6 +101,7 @@
             </v-btn>
             <v-btn
                 color="deep-purple accent-4"
+                @click="goToHistoryData"
                 text>
               查看历史数据
             </v-btn>
