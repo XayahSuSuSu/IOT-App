@@ -108,38 +108,98 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-card class="v-card-common mt-10 mb-10">
-      <v-card-title>数据变化 - {{ sparklines.typeCN[sparklines.typeIndex] }}</v-card-title>
-      <v-card-subtitle>
-        <div>
-          仅展示最新9条数据
-        </div>
-      </v-card-subtitle>
-      <v-sparkline
-          :value="sparklines.value[sparklines.type[sparklines.typeIndex]]"
-          :gradient="sparklines.gradient"
-          :smooth="sparklines.radius || false"
-          :line-width="sparklines.width"
-          auto-draw
-      >
-        <template v-slot:label="item">
-          {{ item.value }}
-        </template>
-      </v-sparkline>
-      <v-card-actions style="margin-top: 20px">
-        <v-btn
-            color="deep-purple accent-4"
-            text>
-          刷新
-        </v-btn>
-        <v-btn
-            color="deep-purple accent-4"
-            @click="changeType"
-            text>
-          更换数据类型
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <v-row>
+      <v-col
+          cols="12"
+          md="4">
+        <v-card class="v-card-common mt-10 mb-10">
+          <v-card-title>数据变化 - {{ sparklines.typeCN[0] }}</v-card-title>
+          <v-card-subtitle>
+            <div>
+              仅展示最新9条数据
+            </div>
+          </v-card-subtitle>
+          <v-sparkline
+              :value="sparklines.value[sparklines.type[0]]"
+              :gradient="sparklines.gradient"
+              :smooth="sparklines.radius || false"
+              :line-width="sparklines.width"
+              auto-draw
+          >
+            <template v-slot:label="item">
+              {{ item.value }}
+            </template>
+          </v-sparkline>
+          <v-card-actions style="margin-top: 20px">
+            <v-btn
+                color="deep-purple accent-4"
+                text>
+              刷新
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+      <v-col
+          cols="12"
+          md="4">
+        <v-card class="v-card-common mt-10 mb-10">
+          <v-card-title>数据变化 - {{ sparklines.typeCN[1] }}</v-card-title>
+          <v-card-subtitle>
+            <div>
+              仅展示最新9条数据
+            </div>
+          </v-card-subtitle>
+          <v-sparkline
+              :value="sparklines.value[sparklines.type[1]]"
+              :gradient="sparklines.gradient"
+              :smooth="sparklines.radius || false"
+              :line-width="sparklines.width"
+              auto-draw
+          >
+            <template v-slot:label="item">
+              {{ item.value }}
+            </template>
+          </v-sparkline>
+          <v-card-actions style="margin-top: 20px">
+            <v-btn
+                color="deep-purple accent-4"
+                text>
+              刷新
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+      <v-col
+          cols="12"
+          md="4">
+        <v-card class="v-card-common mt-10 mb-10">
+          <v-card-title>数据变化 - {{ sparklines.typeCN[2] }}</v-card-title>
+          <v-card-subtitle>
+            <div>
+              仅展示最新9条数据
+            </div>
+          </v-card-subtitle>
+          <v-sparkline
+              :value="sparklines.value[sparklines.type[2]]"
+              :gradient="sparklines.gradient"
+              :smooth="sparklines.radius || false"
+              :line-width="sparklines.width"
+              auto-draw
+          >
+            <template v-slot:label="item">
+              {{ item.value }}
+            </template>
+          </v-sparkline>
+          <v-card-actions style="margin-top: 20px">
+            <v-btn
+                color="deep-purple accent-4"
+                text>
+              刷新
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script src="./index.js"></script>

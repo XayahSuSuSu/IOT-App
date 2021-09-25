@@ -17,7 +17,6 @@ export default {
     sparklines: {
       type: ['temp', 'humi', 'lum'],
       typeCN: ['温度', '湿度', '光照'],
-      typeIndex: 0,
       width: 2,
       radius: 10,
       gradient: gradients[5],
@@ -89,9 +88,6 @@ export default {
       } else {
         // this.stateData[3].total = '已停止更新'
       }
-    },
-    changeType () {
-      this.sparklines.typeIndex = (this.sparklines.typeIndex + 1) % 3
     },
     getAllData () {
       getAllData().then(res => {
