@@ -25,9 +25,8 @@ export async function getAllControlData() {
 /**
  * 添加一条控制记录
  */
-export async function addControlData(obj, action) {
+export async function addControlData(protocol) {
     return await post('/api/v1/control', {
-        obj: obj,
-        action: action,
+        protocol: protocol,
     })
 }

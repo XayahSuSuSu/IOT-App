@@ -57,7 +57,7 @@
           md="8">
         <v-card class="v-card-common">
           <v-card-title>实时状态</v-card-title>
-          <v-card-subtitle>更新频率:2s</v-card-subtitle>
+          <v-card-subtitle>更新频率: {{ refreshTime / 1000 }}s</v-card-subtitle>
           <v-switch
               style="position: absolute;right: 0;top: 0"
               v-model="stateSwitcher"
@@ -123,7 +123,7 @@
           <v-card-title>数据变化 - {{ sparklines.typeCN[0] }}</v-card-title>
           <v-card-subtitle>
             <div>
-              仅展示最新9条数据
+              仅展示最新10条数据
             </div>
           </v-card-subtitle>
           <v-sparkline
@@ -153,7 +153,7 @@
           <v-card-title>数据变化 - {{ sparklines.typeCN[1] }}</v-card-title>
           <v-card-subtitle>
             <div>
-              仅展示最新9条数据
+              仅展示最新10条数据
             </div>
           </v-card-subtitle>
           <v-sparkline
@@ -183,7 +183,7 @@
           <v-card-title>数据变化 - {{ sparklines.typeCN[2] }}</v-card-title>
           <v-card-subtitle>
             <div>
-              仅展示最新9条数据
+              仅展示最新10条数据
             </div>
           </v-card-subtitle>
           <v-sparkline

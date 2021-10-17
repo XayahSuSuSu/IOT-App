@@ -14,6 +14,7 @@ export default {
     name: 'Index',
     data: () => ({
         stateSwitcher: false,
+        refreshTime: 1000,
         sparklines: {
             type: ['temp', 'humi', 'lum'],
             typeCN: ['温度', '湿度', '光照'],
@@ -78,11 +79,11 @@ export default {
                     this.stateData[2].total = dataRes.lum
                     this.stateData[3].total = new Date().toLocaleTimeString()
                     console.log(dataRes)
-                    this.sparklines.value.temp.splice(1, 1)
+                    this.sparklines.value.temp.splice(0, 1)
                     this.sparklines.value.temp.push(dataRes.temp)
-                    this.sparklines.value.humi.splice(1, 1)
+                    this.sparklines.value.humi.splice(0, 1)
                     this.sparklines.value.humi.push(dataRes.humi)
-                    this.sparklines.value.lum.splice(1, 1)
+                    this.sparklines.value.lum.splice(0, 1)
                     this.sparklines.value.lum.push(dataRes.lum)
                 })
             } else {
@@ -105,6 +106,6 @@ export default {
             setTimeout(() => {
                 this.getLatestData()
             }, 0)
-        }, 2000)
+        }, this.refreshTime)
     }
 }

@@ -5,21 +5,25 @@ export default {
     data() {
         return {
             valid: false,
-            objSelected: '',
-            actionSelected: '',
+            objCode: '2',
+            actionCode: '3',
+            paramCode: '1,1,6',
             dialog: false,
             objRules: [
-                v => !!v || '请选择控制对象',
+                v => !!v || '请输入对象代码',
             ],
             actionRules: [
-                v => !!v || '请选择控制指令',
+                v => !!v || '请输入控制代码',
+            ],
+            paramRules: [
+                v => !!v || '请输入参数代码',
             ],
             headers: [
                 {text: 'ID', value: 'id', align: 'start'},
-                {text: '时间', value: 'time'},
-                {text: '对象', value: 'obj'},
-                {text: '指令', value: 'action'},
-                {text: '状态', value: 'state'},
+                {text: '创建时间', value: 'created_at'},
+                {text: '更新时间', value: 'updated_at'},
+                {text: '协议码', value: 'protocol'},
+                {text: '状态', value: 'finished'},
             ],
             desserts: [],
         }
@@ -30,13 +34,12 @@ export default {
                 const dataRes = JSON.parse(JSON.stringify(res.data.data))
                 this.desserts = []
                 for (let i = 0; i < dataRes.length; i++) {
-                    console.log(dataRes[i]['created_at'])
                     this.desserts.push({
                         id: dataRes[i]['id'],
-                        time: dataRes[i]['created_at'],
-                        obj: dataRes[i]['obj'],
-                        action: dataRes[i]['action'],
-                        state: dataRes[i]['state'],
+                        created_at: dataRes[i]['created_at'],
+                        updated_at: dataRes[i]['updated_at'],
+                        protocol: dataRes[i]['protocol'],
+                        finished: dataRes[i]['finished'],
                     })
                 }
                 console.log(this.desserts)
@@ -49,7 +52,12 @@ export default {
                 this.$refs.form.validate()
             } else {
                 this.dialog = false
-                addControlData('fan', 1).then(res => {
+                // [11,6,2,3,3,1,1,6,204]
+                // [11,6,2,3,3,0,1,6,204]
+                const paramList = this.paramCode.split(',')
+                const protocol = `[11,6,${this.objCode},${this.actionCode},${paramList.length},${this.paramCode},204]`
+                console.log(protocol)
+                addControlData(protocol).then(res => {
                     this.getAllControlData()
                     console.log(res)
                 })

@@ -40,23 +40,34 @@
                     cols="12"
                     sm="6"
                 >
-                  <v-combobox
-                      v-model="objSelected"
+                  <v-text-field
+                      v-model="objCode"
                       :rules="objRules"
-                      :items="['风扇', '灯泡']"
-                      label="控制对象"
-                  ></v-combobox>
+                      label="控制对象代码"
+                      required
+                  ></v-text-field>
                 </v-col>
                 <v-col
                     cols="12"
                     sm="6"
                 >
-                  <v-combobox
-                      v-model="actionSelected"
+                  <v-text-field
+                      v-model="actionCode"
                       :rules="actionRules"
-                      :items="['开', '关']"
-                      label="控制指令"
-                  ></v-combobox>
+                      label="操作代码"
+                      required
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                    cols="12"
+                    sm="6"
+                >
+                  <v-text-field
+                      v-model="paramCode"
+                      :rules="paramRules"
+                      label="参数代码"
+                      required
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-form>
