@@ -9,6 +9,21 @@ DB = 'iotapp'  # 数据库名
 TABLE_DATA = 'data'  # 数据表名
 TABLE_CONTROL = 'control'  # 数据表名
 
+FIELD_DATA = [
+    "temp float,",
+    "humi float,",
+    "lum float"
+]
+
+FIELD_CONTROL = [
+    "protocol text,",
+    "finished tinyint"
+]
+
+
+def timestamp():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 
 def get_all(table):
     """返回表中所有数据"""
@@ -29,21 +44,20 @@ def init():
     cursor.execute("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;".format(DB))
     # 选择数据库
     cursor.execute("use {};".format(DB))
-    # 创建数据表
+    # 创建数据表(DATA)
+    field_data = "".join(FIELD_DATA)
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,"
-        "created_at timestamp,"
-        "updated_at timestamp,"
-        "temp float,"
-        "humi float,"
-        "lum float);".format(TABLE_DATA))
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_DATA)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_data
+        + ");")
+    # 创建数据表(CONTROL)
+    field_control = "".join(FIELD_CONTROL)
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,"
-        "created_at timestamp,"
-        "updated_at timestamp,"
-        "obj text,"
-        "action tinyint,"
-        "state tinyint);".format(TABLE_CONTROL))
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_CONTROL)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_control
+        + ");")
     db.close()
 
 
@@ -53,19 +67,20 @@ def insert(table, data):
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
     if table == TABLE_DATA:
-        cursor.execute(
-            "INSERT INTO {} VALUES (0,'{}','{}',{},{},{})".format(table,
-                                                                  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                                                  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                                                  data['temp'], data['humi'], data['lum']))
+        insert_data = "INSERT INTO {} VALUES (0,'{}','{}'".format(table, timestamp(), timestamp())
+        for i in data:
+            insert_data += ","
+            insert_data += i
+        insert_data += ")"
+        cursor.execute(insert_data)
     elif table == TABLE_CONTROL:
-        cursor.execute(
-            "INSERT INTO {} VALUES (0,'{}','{}','{}',{},{})".format(table,
-                                                                    datetime.datetime.now().strftime(
-                                                                        "%Y-%m-%d %H:%M:%S"),
-                                                                    datetime.datetime.now().strftime(
-                                                                        "%Y-%m-%d %H:%M:%S"),
-                                                                    data['obj'], data['action'], 0))
+        insert_data = "INSERT INTO {} VALUES (0,'{}','{}'".format(table, timestamp(), timestamp())
+        for i in data:
+            insert_data += ",'"
+            insert_data += i
+            insert_data += "'"
+        insert_data += ",0)"
+        cursor.execute(insert_data)
     db.commit()
     db.close()
 
@@ -76,7 +91,6 @@ def update(table, id):
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
     cursor.execute(
-        "update {} set state = {},updated_at {} where id = {}".format(table, 1, datetime.datetime.now().strftime(
-            "%Y-%m-%d %H:%M:%S"), id))
+        "update {} set finished = {},updated_at = '{}' where id = {}".format(table, 1, timestamp(), id))
     db.commit()
     db.close()

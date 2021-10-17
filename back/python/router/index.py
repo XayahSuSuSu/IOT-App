@@ -17,11 +17,8 @@ def data():
         if request.method == 'POST':
             # temp=20&humi=0.8&lum=400
             form = request.form.to_dict()
-            _db.insert('data', {
-                'temp': form['temp'],
-                'humi': form['humi'],
-                'lum': form['lum']
-            })
+            list_data = list(form.values())
+            _db.insert('data', list_data)
             return {
                 'code': 1,
                 'message': '成功插入一条数据',
@@ -37,28 +34,19 @@ def data():
             }
             if args['get'] == 'all':
                 # /api/v1/data?get=all
-                for i in data:
-                    res['data'].append({
-                        'id': i['id'],
-                        'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'temp': i['temp'],
-                        'humi': i['humi'],
-                        'lum': i['lum'],
-                    })
+                for i in range(len(data)):
+                    data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                res['data'] = data
             if args['get'] == 'latest':
                 # /api/v1/data?get=latest
                 if len(data) == 0:
                     res['data'] = '没有数据'
                 else:
-                    res['data'] = {
-                        'id': data[len(data) - 1]['id'],
-                        'created_at': data[len(data) - 1]['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'updated_at': data[len(data) - 1]['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'temp': data[len(data) - 1]['temp'],
-                        'humi': data[len(data) - 1]['humi'],
-                        'lum': data[len(data) - 1]['lum'],
-                    }
+                    last_index = len(data) - 1
+                    data[last_index]['created_at'] = data[last_index]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    data[last_index]['updated_at'] = data[last_index]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    res['data'] = data[last_index]
             return res
     except KeyError:
         return {
@@ -71,13 +59,10 @@ def data():
 def control():
     try:
         if request.method == 'POST':
-            # obj=fan&action=1
+            # protocol=xxx
             form = request.form.to_dict()
-            print(form)
-            _db.insert('control', {
-                'obj': form['obj'],
-                'action': form['action'],
-            })
+            list_data = list(form.values())
+            _db.insert('control', list_data)
             return {
                 'code': 1,
                 'message': '成功插入一条数据',
@@ -93,39 +78,24 @@ def control():
             }
             if args['get'] == 'all':
                 # /api/v1/control?get=all
-                for i in data:
-                    res['data'].append({
-                        'id': i['id'],
-                        'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'obj': i['obj'],
-                        'action': i['action'],
-                        'state': i['state'],
-                    })
+                for i in range(len(data)):
+                    data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                res['data'] = data
             if args['get'] == 'todo':
                 # /api/v1/control?get=todo
-                for i in data:
-                    if i['state'] == 0:
-                        res['data'].append({
-                            'id': i['id'],
-                            'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                            'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                            'obj': i['obj'],
-                            'action': i['action'],
-                            'state': i['state'],
-                        })
+                for i in range(len(data)):
+                    if data[i]['finished'] == 0:
+                        data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        res['data'].append(data[i])
             if args['get'] == 'finished':
                 # /api/v1/control?get=finished
-                for i in data:
-                    if i['state'] == 1:
-                        res['data'].append({
-                            'id': i['id'],
-                            'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                            'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                            'obj': i['obj'],
-                            'action': i['action'],
-                            'state': i['state'],
-                        })
+                for i in range(len(data)):
+                    if data[i]['finished'] == 1:
+                        data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        res['data'].append(data[i])
             return res
     except KeyError:
         return {
@@ -161,26 +131,18 @@ def polling():
             # null or temp=20&humi=0.8&lum=400
             form = request.form.to_dict()
             if form != {}:
-                _db.insert('data', {
-                    'temp': form['temp'],
-                    'humi': form['humi'],
-                    'lum': form['lum']
-                })
+                list_data = list(form.values())
+                _db.insert('data', list_data)
             res = {
                 'code': 1,
                 'data': [],
             }
             data = _db.get_all('control')
-            for i in data:
-                if i['state'] == 0:
-                    res['data'].append({
-                        'id': i['id'],
-                        'created_at': i['created_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'updated_at': i['updated_at'].strftime("%Y-%m-%d %H:%M:%S"),
-                        'obj': i['obj'],
-                        'action': i['action'],
-                        'state': i['state'],
-                    })
+            for i in range(len(data)):
+                if data[i]['finished'] == 0:
+                    data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    res['data'].append(data[i])
             return res
     except KeyError:
         print(KeyError)
