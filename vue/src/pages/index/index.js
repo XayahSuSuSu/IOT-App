@@ -1,33 +1,19 @@
 import {getLatestData} from '@/api/api'
 import {mdiAirHumidifier, mdiAlarmLight, mdiResistorNodes, mdiServer, mdiTemperatureCelsius, mdiUpdate} from '@mdi/js'
 
-const gradients = [
-    ['#222'],
-    ['#42b3f4'],
-    ['red', 'orange', 'yellow'],
-    ['purple', 'violet'],
-    ['#00c6ff', '#F0F', '#FF0'],
-    ['#f72047', '#ffd200', '#1feaea'],
-]
+
+import VeLine from 'v-charts/lib/line.common'
 
 export default {
     name: 'Index',
+    components: {VeLine},
     data: () => ({
+        chartData: {
+            columns: ['id', 'temp', 'humi', 'lum'],
+            rows: []
+        },
         stateSwitcher: false,
         refreshTime: 1000,
-        sparklines: {
-            type: ['temp', 'humi', 'lum'],
-            typeCN: ['温度', '湿度', '光照'],
-            width: 2,
-            radius: 10,
-            gradient: gradients[5],
-            value: {
-                'temp': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                'humi': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                'lum': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            },
-            gradients,
-        },
         serverData: [
             {
                 title: '服务器',
@@ -79,12 +65,27 @@ export default {
                     this.stateData[2].total = dataRes.lum
                     this.stateData[3].total = new Date().toLocaleTimeString()
                     console.log(dataRes)
-                    this.sparklines.value.temp.splice(0, 1)
-                    this.sparklines.value.temp.push(dataRes.temp)
-                    this.sparklines.value.humi.splice(0, 1)
-                    this.sparklines.value.humi.push(dataRes.humi)
-                    this.sparklines.value.lum.splice(0, 1)
-                    this.sparklines.value.lum.push(dataRes.lum)
+                    const mLength = this.chartData.rows.length
+                    if (mLength === 0) {
+                        this.chartData.rows.push({
+                            'id': dataRes.id,
+                            'temp': dataRes.temp,
+                            'humi': dataRes.humi,
+                            'lum': dataRes.lum
+                        })
+                    } else {
+                        if (this.chartData.rows[mLength - 1]['id'] !== dataRes.id) {
+                            if (mLength === 10) {
+                                this.chartData.rows.splice(0, 1)
+                            }
+                            this.chartData.rows.push({
+                                'id': dataRes.id,
+                                'temp': dataRes.temp,
+                                'humi': dataRes.humi,
+                                'lum': dataRes.lum
+                            })
+                        }
+                    }
                 })
             } else {
                 // this.stateData[3].total = '已停止更新'
