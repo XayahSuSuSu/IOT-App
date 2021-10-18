@@ -28,5 +28,6 @@ export async function getAllControlData() {
 export async function addControlData(protocol) {
     return await post('/api/v1/control', {
         protocol: protocol,
+        state: ''
     })
 }
