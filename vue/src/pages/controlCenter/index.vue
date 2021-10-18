@@ -41,9 +41,10 @@
                     sm="6"
                 >
                   <v-text-field
-                      v-model="objCode"
-                      :rules="objRules"
-                      label="控制对象代码"
+                      v-model="headCode"
+                      :rules="headRules"
+                      @keyup="getCode"
+                      label="包头代码"
                       required
                   ></v-text-field>
                 </v-col>
@@ -52,20 +53,61 @@
                     sm="6"
                 >
                   <v-text-field
-                      v-model="actionCode"
-                      :rules="actionRules"
-                      label="操作代码"
+                      v-model="tailCode"
+                      :rules="tailRules"
+                      @keyup="getCode"
+                      label="包尾代码"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col
+                    cols="12"
+                    sm="4"
+                >
+                  <v-text-field
+                      v-model="stuffCode"
+                      :rules="stuffRules"
+                      @keyup="getCode"
+                      label="功能代码"
                       required
                   ></v-text-field>
                 </v-col>
                 <v-col
                     cols="12"
-                    sm="6"
+                    sm="4"
+                >
+                  <v-text-field
+                      v-model="objCode"
+                      :rules="objRules"
+                      @keyup="getCode"
+                      label="对象代码"
+                      required
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                    cols="12"
+                    sm="4"
                 >
                   <v-text-field
                       v-model="paramCode"
                       :rules="paramRules"
+                      @keyup="getCode"
                       label="参数代码"
+                      required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col
+                    cols="12"
+                    sm="12"
+                >
+                  <v-text-field
+                      v-model="showCode"
+                      label="构造协议码"
+                      readonly
                       required
                   ></v-text-field>
                 </v-col>
