@@ -17,6 +17,7 @@ FIELD_DATA = [
 
 FIELD_CONTROL = [
     "protocol text,",
+    "state text,",
     "finished tinyint"
 ]
 
@@ -85,12 +86,13 @@ def insert(table, data):
     db.close()
 
 
-def update(table, id):
+def update(table, id, state):
     """更新一条记录"""
     db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
     cursor.execute(
-        "update {} set finished = {},updated_at = '{}' where id = {}".format(table, 1, timestamp(), id))
+        "update {} set finished = {},updated_at = '{}',state = '{}' where id = {}".format(table, 1, timestamp(), state,
+                                                                                          id))
     db.commit()
     db.close()

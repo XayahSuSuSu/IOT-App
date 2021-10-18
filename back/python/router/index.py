@@ -108,10 +108,10 @@ def control():
 def finish():
     try:
         if request.method == 'POST':
-            # id=1
+            # id=1&state=[1,2]
             form = request.form.to_dict()
             print(form)
-            _db.update('control', form['id'])
+            _db.update('control', form['id'], form['state'])
             return {
                 'code': 1,
                 'message': '成功更新一条数据',
