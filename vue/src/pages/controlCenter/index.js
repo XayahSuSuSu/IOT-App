@@ -4,6 +4,7 @@ export default {
     name: 'ControlCenter',
     data() {
         return {
+            search: '',
             valid: false,
             headCode: '11,6',
             stuffCode: '2',

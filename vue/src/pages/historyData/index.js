@@ -4,6 +4,7 @@ export default {
     name: 'HistoryData',
     data() {
         return {
+            search: '',
             headers: [
                 {text: '时间', value: 'time', align: 'start'},
                 {text: '温度', value: 'temp'},
