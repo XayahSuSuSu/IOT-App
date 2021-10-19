@@ -5,7 +5,7 @@
       <v-data-table
           :headers="headers"
           :items="desserts"
-          :items-per-page="5"
+          :items-per-page="10"
       ></v-data-table>
     </v-card>
   </v-container>
