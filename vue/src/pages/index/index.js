@@ -1,4 +1,4 @@
-import {getLatestData} from '@/api/api'
+import {getAllData, getLatestData} from '@/api/api'
 import {mdiAirHumidifier, mdiAlarmLight, mdiResistorNodes, mdiServer, mdiTemperatureCelsius, mdiUpdate} from '@mdi/js'
 
 
@@ -91,6 +91,30 @@ export default {
                 // this.stateData[3].total = '已停止更新'
             }
         },
+        getTenData() {
+            if (this.stateSwitcher) {
+                getAllData().then(res => {
+                    const dataRes = JSON.parse(JSON.stringify(res.data.data))
+                    console.log(dataRes)
+                    const mLength = dataRes.length
+                    this.stateData[0].total = dataRes[mLength - 1].temp
+                    this.stateData[1].total = dataRes[mLength - 1].humi
+                    this.stateData[2].total = dataRes[mLength - 1].lum
+                    this.stateData[3].total = new Date().toLocaleTimeString()
+                    this.chartData.rows = []
+                    for (let i = mLength - 11; i < mLength; i++) {
+                        this.chartData.rows.push({
+                            'id': dataRes[i].id,
+                            'temp': dataRes[i].temp,
+                            'humi': dataRes[i].humi,
+                            'lum': dataRes[i].lum
+                        })
+                    }
+                })
+            } else {
+                // this.stateData[3].total = '已停止更新'
+            }
+        },
         goToHistoryData() {
             this.$router.push({
                 name: 'HistoryData'
@@ -105,7 +129,8 @@ export default {
     created() {
         setInterval(() => {
             setTimeout(() => {
-                this.getLatestData()
+                // this.getLatestData()
+                this.getTenData()
             }, 0)
         }, this.refreshTime)
     }
