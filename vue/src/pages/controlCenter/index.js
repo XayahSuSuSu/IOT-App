@@ -52,7 +52,7 @@ export default {
                         updated_at: dataRes[i]['updated_at'],
                         protocol: dataRes[i]['protocol'],
                         state: dataRes[i]['state'].replace(/ /g, ''),
-                        finished: dataRes[i]['finished'],
+                        finished: dataRes[i]['finished'] === 1 ? '已执行' : '未执行',
                     })
                 }
                 console.log(this.desserts)
