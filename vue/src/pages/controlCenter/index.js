@@ -75,7 +75,10 @@ export default {
         },
         getCode() {
             this.paramList = this.paramCode.split(',')
-            this.showCode = `[${this.headCode},${this.stuffCode},${this.objCode},${this.paramList.length},${this.paramCode},${this.tailCode}]`
+            this.showCode = `[${this.headCode},${this.objCode},${this.stuffCode},${this.paramList.length},${this.paramCode},${this.tailCode}]`
+        },
+        openHelpDialog() {
+            this.helpDialog = true
         }
     },
     created() {

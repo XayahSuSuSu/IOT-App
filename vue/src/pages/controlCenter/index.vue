@@ -78,10 +78,10 @@
                     sm="4"
                 >
                   <v-text-field
-                      v-model="stuffCode"
-                      :rules="stuffRules"
+                      v-model="objCode"
+                      :rules="objRules"
                       @keyup="getCode"
-                      label="功能代码"
+                      label="对象代码"
                       required
                   ></v-text-field>
                 </v-col>
@@ -90,10 +90,10 @@
                     sm="4"
                 >
                   <v-text-field
-                      v-model="objCode"
-                      :rules="objRules"
+                      v-model="stuffCode"
+                      :rules="stuffRules"
                       @keyup="getCode"
-                      label="对象代码"
+                      label="功能代码"
                       required
                   ></v-text-field>
                 </v-col>
