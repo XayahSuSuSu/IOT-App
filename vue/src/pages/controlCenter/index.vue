@@ -20,7 +20,7 @@
       ></v-data-table>
     </v-card>
     <v-dialog
-        v-model="dialog"
+        v-model="dialogs.pro.show"
         persistent
         max-width="600px"
     >
@@ -52,8 +52,8 @@
                     sm="6"
                 >
                   <v-text-field
-                      v-model="headCode"
-                      :rules="headRules"
+                      v-model="dialogs.pro.codes.head"
+                      :rules="dialogs.pro.rules.head"
                       @keyup="getCode"
                       label="包头代码"
                       required
@@ -64,8 +64,8 @@
                     sm="6"
                 >
                   <v-text-field
-                      v-model="tailCode"
-                      :rules="tailRules"
+                      v-model="dialogs.pro.codes.tail"
+                      :rules="dialogs.pro.rules.tail"
                       @keyup="getCode"
                       label="包尾代码"
                       required
@@ -78,8 +78,8 @@
                     sm="4"
                 >
                   <v-text-field
-                      v-model="objCode"
-                      :rules="objRules"
+                      v-model="dialogs.pro.codes.obj"
+                      :rules="dialogs.pro.rules.obj"
                       @keyup="getCode"
                       label="对象代码"
                       required
@@ -90,8 +90,8 @@
                     sm="4"
                 >
                   <v-text-field
-                      v-model="stuffCode"
-                      :rules="stuffRules"
+                      v-model="dialogs.pro.codes.stuff"
+                      :rules="dialogs.pro.rules.stuff"
                       @keyup="getCode"
                       label="功能代码"
                       required
@@ -102,8 +102,8 @@
                     sm="4"
                 >
                   <v-text-field
-                      v-model="paramCode"
-                      :rules="paramRules"
+                      v-model="dialogs.pro.codes.param"
+                      :rules="dialogs.pro.rules.param"
                       @keyup="getCode"
                       label="参数代码"
                       required
@@ -116,7 +116,7 @@
                     sm="12"
                 >
                   <v-text-field
-                      v-model="showCode"
+                      v-model="dialogs.pro.codes.show"
                       label="构造协议码"
                       readonly
                       required
@@ -127,11 +127,18 @@
           </v-container>
         </v-card-text>
         <v-card-actions>
+          <v-btn
+              icon
+              color="red"
+              @click="dialogs.help.show = true"
+          >
+            <v-icon>mdi-help-circle</v-icon>
+          </v-btn>
           <v-spacer></v-spacer>
           <v-btn
               color="blue darken-1"
               text
-              @click="dialog = false"
+              @click="dialogs.pro.show = false"
           >
             取消
           </v-btn>
@@ -141,6 +148,36 @@
               @click="addMyControlData"
           >
             添加
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+        v-model="dialogs.help.show"
+        persistent
+        max-width="290"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          帮助
+        </v-card-title>
+        <v-card-text>
+          控制报文：<br/>0xb 0x6 编号 功能码 字节数 XX 0xcc
+        </v-card-text>
+        <v-card-text>
+          响应报文：<br/>0xb 0x7 编号 功能码 字节数 XX 0xcc
+        </v-card-text>
+        <v-card-text>
+          功能码：<br/>1. 读<br/>2. 写<br/>3. 设置阈值<br/>4. 无回复写
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="green darken-1"
+              text
+              @click="dialogs.help.show = false"
+          >
+            好的
           </v-btn>
         </v-card-actions>
       </v-card>
