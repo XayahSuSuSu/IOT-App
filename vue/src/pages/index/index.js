@@ -164,7 +164,9 @@ export default {
         setInterval(() => {
             setTimeout(() => {
                 this.getTenData()
-                this.getBooks()
+                if (this.dialogs.add_books.show === true) {
+                    this.getBooks()
+                }
             }, 0)
         }, this.refreshTime)
     }
