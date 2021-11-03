@@ -37,9 +37,9 @@ def books_check():
 def books():
     try:
         if request.method == 'POST':
-            # rfid=xxx&name=&place=&state=&userid=
+            # rfid=xxx&name=&place=
             form = request.form.to_dict()
-            list_data = [form['rfid'], form['name'], form['place'], form['state'], form['userid']]
+            list_data = [form['rfid'], form['name'], form['place'], '', '']
             _db.delete_useless_books()
             _db.sort()
             _db.insert('books', list_data)
@@ -64,6 +64,7 @@ def books():
             'code': -1,
             'message': '参数错误',
         }
+
 
 @iot.route('/api/v1/data', methods=['GET', 'POST'])
 def data():

@@ -20,8 +20,8 @@ FIELD_BOOKS = [
     "rfid text,",
     "name text,",
     "place text,",
-    "state text,",
-    "userid text",
+    "userid_now text,",
+    "userid_history text",
 ]
 
 FIELD_USERS = [
