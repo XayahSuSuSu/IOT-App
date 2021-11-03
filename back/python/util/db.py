@@ -104,14 +104,17 @@ def insert(table, data):
     db.close()
 
 
-def update(table, id, state):
+def update(table, rfid, userid_now, userid_history):
     """更新一条记录"""
     db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
     cursor.execute(
-        "update {} set finished = {},updated_at = '{}',state = '{}' where id = {}".format(table, 1, timestamp(), state,
-                                                                                          id))
+        "update {} set userid_now = '{}',userid_history = '{}',updated_at = '{}' where rfid = {}".format(table,
+                                                                                                     userid_now,
+                                                                                                     userid_history,
+                                                                                                     timestamp(),
+                                                                                                     rfid))
     db.commit()
     db.close()
 

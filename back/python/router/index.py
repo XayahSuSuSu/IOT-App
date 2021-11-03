@@ -33,7 +33,7 @@ def books_check():
         }
 
 
-@iot.route('/api/v1/books', methods=['GET', 'POST'])
+@iot.route('/api/v1/books', methods=['GET', 'POST', 'PUT'])
 def books():
     try:
         if request.method == 'POST':
@@ -43,6 +43,20 @@ def books():
             _db.delete_useless('books')
             _db.sort('books')
             _db.insert('books', list_data)
+            return {
+                'code': 1,
+                'message': '成功插入一条数据',
+                'data': form
+            }
+        elif request.method == 'PUT':
+            # rfid=xxx&userid_now=&userid_history=
+            form = request.form.to_dict()
+            _db.delete_useless('books')
+            _db.sort('books')
+            _db.delete_useless('users')
+            _db.sort('users')
+            _db.update('books', form['rfid'], form['userid_now'], form['userid_history'])
+
             return {
                 'code': 1,
                 'message': '成功插入一条数据',
