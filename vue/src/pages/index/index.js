@@ -63,6 +63,7 @@ export default {
         ifAdding: false,
         ifBorrowingBooks: false,
         ifBorrowingUsers: false,
+        ifReturning: false,
         valid: false,
         dialogs: {
             add_books: {
@@ -132,12 +133,32 @@ export default {
                         name: '',
                         place: '',
                         userid_now: '',
+                        userid: '',
                         userid_history: '',
                     },
                     users: {
                         rfid: '',
                         name: '',
                     }
+                }
+            },
+            return_books: {
+                show: false,
+                rules: {
+                    rfid: [
+                        v => !!v || '请输入图书编号',
+                    ],
+                    name: [
+                        v => !!v || '请输入图书名称',
+                    ],
+                    place: [
+                        v => !!v || '请输入存放位置',
+                    ]
+                },
+                codes: {
+                    rfid: '',
+                    name: '',
+                    place: '',
                 }
             },
         },
@@ -189,31 +210,40 @@ export default {
                 const books_res_length = books_res.length
                 if (books_res[books_res_length - 1]['name'] === '') {
                     this.dialogs.add_books.codes.rfid = books_res[books_res_length - 1]['rfid']
+                    this.dialogs.return_books.codes.rfid = books_res[books_res_length - 1]['rfid']
                     this.dialogs.borrow_books.codes.books.rfid = books_res[books_res_length - 1]['rfid']
                     this.ifAdding = true
+                    this.ifReturning = false
                     this.ifBorrowingBooks = false
                     for (let i = 0; i < books_res_length - 1; i++) {
                         if (books_res[books_res_length - 1]['rfid'] === books_res[i]['rfid']) {
                             this.dialogs.add_books.codes.name = books_res[i]['name']
+                            this.dialogs.return_books.codes.name = books_res[i]['name']
                             this.dialogs.borrow_books.codes.books.name = books_res[i]['name']
                             this.dialogs.add_books.codes.place = books_res[i]['place']
+                            this.dialogs.return_books.codes.place = books_res[i]['place']
                             this.dialogs.borrow_books.codes.books.place = books_res[i]['place']
                             this.ifAdding = false
+                            this.ifReturning = true
                             this.ifBorrowingBooks = true
 
+                            this.dialogs.borrow_books.codes.books.userid = books_res[i]['userid_now']
                             this.dialogs.borrow_books.codes.books.userid_history = books_res[i]['userid_history']
 
                             if (books_res[i]['userid_now'] === '') {
                                 this.dialogs.borrow_books.codes.books.userid_now = '未借阅'
+                                this.ifReturning = false
                             } else {
                                 this.dialogs.borrow_books.codes.books.userid_now = '已借阅'
                                 this.ifBorrowingBooks = false
+                                this.ifReturning = true
                             }
                             break
                         }
                     }
                 } else {
                     this.ifAdding = false
+                    this.ifReturning = false
                     this.ifBorrowingBooks = false
                 }
             })
@@ -284,12 +314,24 @@ export default {
                 console.log(borrow_res)
             })
         },
+        returnBooks() {
+            this.dialogs.return_books.show = false
+            const data = {
+                rfid: this.dialogs.borrow_books.codes.books.rfid,
+                userid_now: '',
+                userid_history: this.dialogs.borrow_books.codes.books.userid_history + this.dialogs.borrow_books.codes.books.userid + ',',
+            }
+            updateBooks(data).then(res => {
+                const return_res = JSON.parse(JSON.stringify(res.data.data))
+                console.log(return_res)
+            })
+        },
     },
     created() {
         setInterval(() => {
             setTimeout(() => {
                 this.getTenData()
-                if (this.dialogs.add_books.show === true || this.dialogs.borrow_books.show === true) {
+                if (this.dialogs.add_books.show === true || this.dialogs.borrow_books.show === true || this.dialogs.return_books.show === true) {
                     this.getBooks()
                 }
                 if (this.dialogs.add_users.show === true || this.dialogs.borrow_books.show === true) {

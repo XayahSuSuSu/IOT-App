@@ -396,6 +396,95 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
+            <v-dialog
+                v-model="dialogs.return_books.show"
+                persistent
+                max-width="600px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    color="deep-purple accent-4"
+                    text
+                    v-bind="attrs"
+                    v-on="on">
+                  归还图书
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="text-h5">归还图书</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-form
+                        ref="form"
+                        v-model="valid"
+                    >
+                      <v-row>
+                        <v-col
+                            cols="12"
+                            sm="4"
+                        >
+                          <v-text-field
+                              v-model="dialogs.return_books.codes.rfid"
+                              :rules="dialogs.return_books.rules.rfid"
+                              label="图书编码"
+                              required
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            sm="4"
+                        >
+                          <v-text-field
+                              v-model="dialogs.return_books.codes.name"
+                              :rules="dialogs.return_books.rules.name"
+                              label="图书名称"
+                              required
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            sm="4"
+                        >
+                          <v-text-field
+                              v-model="dialogs.return_books.codes.place"
+                              :rules="dialogs.return_books.rules.place"
+                              label="存放位置"
+                              required
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-form>
+                  </v-container>
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn
+                      icon
+                      color="red"
+                      @click="dialogs.help.show = true"
+                  >
+                    <v-icon>mdi-help-circle</v-icon>
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="dialogs.return_books.show = false"
+                  >
+                    取消
+                  </v-btn>
+                  <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="returnBooks"
+                      :disabled="ifReturning===false"
+                  >
+                    归还
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-actions>
         </v-card>
       </v-col>
