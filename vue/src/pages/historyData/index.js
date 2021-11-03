@@ -1,4 +1,4 @@
-import {getAllData} from "@/api/api";
+import {getBooks} from "@/api/api";
 
 export default {
     name: 'HistoryData',
@@ -7,33 +7,34 @@ export default {
             search: '',
             headers: [
                 {text: '时间', value: 'time', align: 'start'},
-                {text: '温度', value: 'temp'},
-                {text: '湿度', value: 'humi'},
-                {text: '光照', value: 'lum'},
+                {text: 'RFID', value: 'rfid'},
+                {text: '名称', value: 'name'},
+                {text: '位置', value: 'place'},
+                {text: '借阅', value: 'userid_now'},
+                {text: '历史', value: 'userid_history'},
             ],
             desserts: [],
         }
     },
     methods: {
-        getAllData() {
-            getAllData().then(res => {
+        getBooks() {
+            getBooks().then(res => {
                 const dataRes = JSON.parse(JSON.stringify(res.data.data))
                 this.desserts = []
                 for (let i = 0; i < dataRes.length; i++) {
-                    console.log(dataRes[i]['created_at'])
                     this.desserts.push({
                         time: dataRes[i]['created_at'],
-                        temp: dataRes[i]['temp'],
-                        humi: dataRes[i]['humi'],
-                        lum: dataRes[i]['lum'],
+                        rfid: dataRes[i]['rfid'],
+                        name: dataRes[i]['name'],
+                        place: dataRes[i]['place'],
+                        userid_now: dataRes[i]['userid_now'],
+                        userid_history: dataRes[i]['userid_history'],
                     })
                 }
-                console.log(this.desserts)
-                console.log(dataRes)
             })
         },
     },
     created() {
-        this.getAllData()
+        this.getBooks()
     }
 }
