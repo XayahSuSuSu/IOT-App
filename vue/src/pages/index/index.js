@@ -61,6 +61,8 @@ export default {
             },
         ],
         ifAdding: false,
+        ifBorrowingBooks: false,
+        ifBorrowingUsers: false,
         valid: false,
         dialogs: {
             add_books: {
@@ -95,6 +97,42 @@ export default {
                 codes: {
                     rfid: '',
                     name: '',
+                }
+            },
+            borrow_books: {
+                show: false,
+                rules: {
+                    books: {
+                        rfid: [
+                            v => !!v || '请输入图书编号',
+                        ],
+                        name: [
+                            v => !!v || '请输入图书名称',
+                        ],
+                        place: [
+                            v => !!v || '请输入存放位置',
+                        ]
+                    },
+                    users: {
+                        rfid: [
+                            v => !!v || '请输入用户编号',
+                        ],
+                        name: [
+                            v => !!v || '请输入用户名称',
+                        ]
+                    }
+
+                },
+                codes: {
+                    books: {
+                        rfid: '',
+                        name: '',
+                        place: '',
+                    },
+                    users: {
+                        rfid: '',
+                        name: '',
+                    }
                 }
             },
         },
@@ -146,17 +184,23 @@ export default {
                 const books_res_length = books_res.length
                 if (books_res[books_res_length - 1]['name'] === '') {
                     this.dialogs.add_books.codes.rfid = books_res[books_res_length - 1]['rfid']
+                    this.dialogs.borrow_books.codes.books.rfid = books_res[books_res_length - 1]['rfid']
                     this.ifAdding = true
+                    this.ifBorrowingBooks = false
                     for (let i = 0; i < books_res_length - 1; i++) {
                         if (books_res[books_res_length - 1]['rfid'] === books_res[i]['rfid']) {
                             this.dialogs.add_books.codes.name = books_res[i]['name']
+                            this.dialogs.borrow_books.codes.books.name = books_res[i]['name']
                             this.dialogs.add_books.codes.place = books_res[i]['place']
+                            this.dialogs.borrow_books.codes.books.place = books_res[i]['place']
                             this.ifAdding = false
+                            this.ifBorrowingBooks = true
                             break
                         }
                     }
                 } else {
                     this.ifAdding = false
+                    this.ifBorrowingBooks = true
                 }
             })
         },
@@ -182,16 +226,21 @@ export default {
                 const users_res_length = users_res.length
                 if (users_res[users_res_length - 1]['name'] === '') {
                     this.dialogs.add_users.codes.rfid = users_res[users_res_length - 1]['userid']
+                    this.dialogs.borrow_books.codes.users.rfid = users_res[users_res_length - 1]['userid']
                     this.ifAdding = true
+                    this.ifBorrowingUsers = false
                     for (let i = 0; i < users_res_length - 1; i++) {
                         if (users_res[users_res_length - 1]['userid'] === users_res[i]['userid']) {
                             this.dialogs.add_users.codes.name = users_res[i]['name']
+                            this.dialogs.borrow_books.codes.users.name = users_res[i]['name']
                             this.ifAdding = false
+                            this.ifBorrowingUsers = true
                             break
                         }
                     }
                 } else {
                     this.ifAdding = false
+                    this.ifBorrowingUsers = true
                 }
             })
         },
@@ -216,10 +265,10 @@ export default {
         setInterval(() => {
             setTimeout(() => {
                 this.getTenData()
-                if (this.dialogs.add_books.show === true) {
+                if (this.dialogs.add_books.show === true || this.dialogs.borrow_books.show === true) {
                     this.getBooks()
                 }
-                if (this.dialogs.add_users.show === true) {
+                if (this.dialogs.add_users.show === true || this.dialogs.borrow_books.show === true) {
                     this.getUsers()
                 }
             }, 0)
