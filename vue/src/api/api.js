@@ -23,6 +23,27 @@ export async function updateBooks(data) {
 }
 
 /**
+ * 获取用户记录
+ */
+export async function getUsers() {
+    return await get('/api/v1/users')
+}
+
+/**
+ * 添加用户信息
+ */
+export async function addUsers(data) {
+    return await post('/api/v1/users', data)
+}
+
+/**
+ * 更新用户信息
+ */
+export async function updateUsers(data) {
+    return await update('/api/v1/users', data)
+}
+
+/**
  * 获取烟雾数据
  */
 export async function getData() {

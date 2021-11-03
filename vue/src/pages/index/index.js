@@ -1,4 +1,4 @@
-import {addBooks, getBooks, getData} from '@/api/api'
+import {addBooks, addUsers, getBooks, getData, getUsers} from '@/api/api'
 import {
     mdiCactus,
     mdiResistorNodes,
@@ -82,6 +82,21 @@ export default {
                     place: '',
                 }
             },
+            add_users: {
+                show: false,
+                rules: {
+                    rfid: [
+                        v => !!v || '请输入用户编号',
+                    ],
+                    name: [
+                        v => !!v || '请输入用户名称',
+                    ]
+                },
+                codes: {
+                    rfid: '',
+                    name: '',
+                }
+            },
         },
     }),
     methods: {
@@ -130,7 +145,7 @@ export default {
                 console.log(books_res)
                 const books_res_length = books_res.length
                 if (books_res[books_res_length - 1]['name'] === '') {
-                    this.dialogs.add_books.codes.head = books_res[books_res_length - 1]['rfid']
+                    this.dialogs.add_books.codes.rfid = books_res[books_res_length - 1]['rfid']
                     this.ifAdding = true
                 } else {
                     this.ifAdding = false
@@ -140,23 +155,52 @@ export default {
         addBooks() {
             this.dialogs.add_books.show = false
             const data = {
-                rfid: this.dialogs.add_books.codes.head,
-                name: this.dialogs.add_books.codes.tail,
-                place: this.dialogs.add_books.codes.obj
+                rfid: this.dialogs.add_books.codes.rfid,
+                name: this.dialogs.add_books.codes.name,
+                place: this.dialogs.add_books.codes.place
             }
             addBooks(data).then(res => {
                 const books_res = JSON.parse(JSON.stringify(res.data.data))
                 console.log(books_res)
             })
         },
+        getUsers() {
+            getUsers().then(res => {
+                const users_res = JSON.parse(JSON.stringify(res.data.data))
+                console.log(users_res)
+                const users_res_length = users_res.length
+                if (users_res[users_res_length - 1]['name'] === '') {
+                    this.dialogs.add_users.codes.rfid = users_res[users_res_length - 1]['userid']
+                    this.ifAdding = true
+                } else {
+                    this.ifAdding = false
+                }
+            })
+        },
+        addUsers() {
+            this.dialogs.add_users.show = false
+            const data = {
+                rfid: this.dialogs.add_users.codes.rfid,
+                name: this.dialogs.add_users.codes.name,
+                place: this.dialogs.add_users.codes.place
+            }
+            addUsers(data).then(res => {
+                const users_res = JSON.parse(JSON.stringify(res.data.data))
+                console.log(users_res)
+            })
+        },
     },
     created() {
         this.getBooks()
+        this.getUsers()
         setInterval(() => {
             setTimeout(() => {
                 this.getTenData()
                 if (this.dialogs.add_books.show === true) {
                     this.getBooks()
+                }
+                if (this.dialogs.add_users.show === true) {
+                    this.getUsers()
                 }
             }, 0)
         }, this.refreshTime)
