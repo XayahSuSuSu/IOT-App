@@ -299,7 +299,7 @@
                       <v-row>
                         <v-col
                             cols="12"
-                            sm="4"
+                            sm="3"
                         >
                           <v-text-field
                               v-model="dialogs.borrow_books.codes.books.rfid"
@@ -310,7 +310,7 @@
                         </v-col>
                         <v-col
                             cols="12"
-                            sm="4"
+                            sm="3"
                         >
                           <v-text-field
                               v-model="dialogs.borrow_books.codes.books.name"
@@ -321,12 +321,23 @@
                         </v-col>
                         <v-col
                             cols="12"
-                            sm="4"
+                            sm="3"
                         >
                           <v-text-field
                               v-model="dialogs.borrow_books.codes.books.place"
                               :rules="dialogs.borrow_books.rules.books.place"
                               label="存放位置"
+                              required
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            sm="3"
+                        >
+                          <v-text-field
+                              v-model="dialogs.borrow_books.codes.books.userid_now"
+                              :rules="dialogs.borrow_books.rules.books.userid_now"
+                              label="借阅状态"
                               required
                           ></v-text-field>
                         </v-col>
@@ -377,7 +388,7 @@
                   <v-btn
                       color="blue darken-1"
                       text
-                      @click="addUsers"
+                      @click="borrowBooks"
                       :disabled="ifBorrowingUsers===false || ifBorrowingBooks===false"
                   >
                     借阅

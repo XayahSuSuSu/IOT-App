@@ -1,4 +1,4 @@
-import {addBooks, addUsers, getBooks, getData, getUsers} from '@/api/api'
+import {addBooks, addUsers, getBooks, getData, getUsers, updateBooks} from '@/api/api'
 import {
     mdiCactus,
     mdiResistorNodes,
@@ -111,6 +111,9 @@ export default {
                         ],
                         place: [
                             v => !!v || '请输入存放位置',
+                        ],
+                        userid_now: [
+                            v => !!v || '请输入借阅状态',
                         ]
                     },
                     users: {
@@ -128,6 +131,8 @@ export default {
                         rfid: '',
                         name: '',
                         place: '',
+                        userid_now: '',
+                        userid_history: '',
                     },
                     users: {
                         rfid: '',
@@ -195,12 +200,21 @@ export default {
                             this.dialogs.borrow_books.codes.books.place = books_res[i]['place']
                             this.ifAdding = false
                             this.ifBorrowingBooks = true
+
+                            this.dialogs.borrow_books.codes.books.userid_history = books_res[i]['userid_history']
+
+                            if (books_res[i]['userid_now'] === '') {
+                                this.dialogs.borrow_books.codes.books.userid_now = '未借阅'
+                            } else {
+                                this.dialogs.borrow_books.codes.books.userid_now = '已借阅'
+                                this.ifBorrowingBooks = false
+                            }
                             break
                         }
                     }
                 } else {
                     this.ifAdding = false
-                    this.ifBorrowingBooks = true
+                    this.ifBorrowingBooks = false
                 }
             })
         },
@@ -240,7 +254,7 @@ export default {
                     }
                 } else {
                     this.ifAdding = false
-                    this.ifBorrowingUsers = true
+                    this.ifBorrowingUsers = false
                 }
             })
         },
@@ -256,6 +270,18 @@ export default {
                 this.dialogs.add_users.codes.rfid = ''
                 this.dialogs.add_users.codes.name = ''
                 console.log(users_res)
+            })
+        },
+        borrowBooks() {
+            this.dialogs.borrow_books.show = false
+            const data = {
+                rfid: this.dialogs.borrow_books.codes.books.rfid,
+                userid_now: this.dialogs.borrow_books.codes.users.rfid,
+                userid_history: this.dialogs.borrow_books.codes.books.userid_history,
+            }
+            updateBooks(data).then(res => {
+                const borrow_res = JSON.parse(JSON.stringify(res.data.data))
+                console.log(borrow_res)
             })
         },
     },
