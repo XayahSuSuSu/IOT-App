@@ -1,5 +1,11 @@
 import {getAllData, getLatestData} from '@/api/api'
-import {mdiAirHumidifier, mdiAlarmLight, mdiResistorNodes, mdiServer, mdiTemperatureCelsius, mdiUpdate} from '@mdi/js'
+import {
+    mdiCactus,
+    mdiResistorNodes,
+    mdiServer,
+    mdiSmoke,
+    mdiUpdate
+} from '@mdi/js'
 
 
 import VeLine from 'v-charts/lib/line.common'
@@ -9,7 +15,7 @@ export default {
     components: {VeLine},
     data: () => ({
         chartData: {
-            columns: ['id', 'temp', 'humi', 'lum'],
+            columns: ['id', '烟雾传感器1', '烟雾传感器2', '非法闯入'],
             rows: []
         },
         stateSwitcher: false,
@@ -30,21 +36,21 @@ export default {
         ],
         stateData: [
             {
-                title: '温度',
+                title: '烟雾传感器1',
                 total: 0,
-                icon: mdiTemperatureCelsius,
+                icon: mdiSmoke,
                 color: 'success'
             },
             {
-                title: '湿度',
+                title: '烟雾传感器2',
                 total: 0,
-                icon: mdiAirHumidifier,
+                icon: mdiSmoke,
                 color: 'primary'
             },
             {
-                title: '光照',
+                title: '非法闯入',
                 total: 0,
-                icon: mdiAlarmLight,
+                icon: mdiCactus,
                 color: 'warning'
             },
             {

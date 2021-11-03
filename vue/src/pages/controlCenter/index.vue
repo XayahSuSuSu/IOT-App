@@ -1,26 +1,7 @@
 <template>
   <v-container>
-    <v-card class="v-card-common mt-10 mb-10">
-      <v-card-title>
-        终端控制
-        <v-spacer></v-spacer>
-        <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-        ></v-text-field>
-      </v-card-title>
-      <v-data-table
-          :headers="headers"
-          :items="desserts"
-          :items-per-page="10"
-          :search="search"
-      ></v-data-table>
-    </v-card>
     <v-dialog
-        v-model="dialogs.pro.show"
+        v-model="dialogs.add_books.show"
         persistent
         max-width="600px"
     >
@@ -38,7 +19,7 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="text-h5">添加控制指令</span>
+          <span class="text-h5">录入图书</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -49,39 +30,12 @@
               <v-row>
                 <v-col
                     cols="12"
-                    sm="6"
-                >
-                  <v-text-field
-                      v-model="dialogs.pro.codes.head"
-                      :rules="dialogs.pro.rules.head"
-                      @keyup="getCode"
-                      label="包头代码"
-                      required
-                  ></v-text-field>
-                </v-col>
-                <v-col
-                    cols="12"
-                    sm="6"
-                >
-                  <v-text-field
-                      v-model="dialogs.pro.codes.tail"
-                      :rules="dialogs.pro.rules.tail"
-                      @keyup="getCode"
-                      label="包尾代码"
-                      required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col
-                    cols="12"
                     sm="4"
                 >
                   <v-text-field
-                      v-model="dialogs.pro.codes.obj"
-                      :rules="dialogs.pro.rules.obj"
-                      @keyup="getCode"
-                      label="对象代码"
+                      v-model="dialogs.add_books.codes.head"
+                      :rules="dialogs.add_books.rules.head"
+                      label="图书编码"
                       required
                   ></v-text-field>
                 </v-col>
@@ -90,10 +44,9 @@
                     sm="4"
                 >
                   <v-text-field
-                      v-model="dialogs.pro.codes.stuff"
-                      :rules="dialogs.pro.rules.stuff"
-                      @keyup="getCode"
-                      label="功能代码"
+                      v-model="dialogs.add_books.codes.tail"
+                      :rules="dialogs.add_books.rules.tail"
+                      label="图书名称"
                       required
                   ></v-text-field>
                 </v-col>
@@ -102,23 +55,9 @@
                     sm="4"
                 >
                   <v-text-field
-                      v-model="dialogs.pro.codes.param"
-                      :rules="dialogs.pro.rules.param"
-                      @keyup="getCode"
-                      label="参数代码"
-                      required
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col
-                    cols="12"
-                    sm="12"
-                >
-                  <v-text-field
-                      v-model="dialogs.pro.codes.show"
-                      label="构造协议码"
-                      readonly
+                      v-model="dialogs.add_books.codes.obj"
+                      :rules="dialogs.add_books.rules.obj"
+                      label="存放位置"
                       required
                   ></v-text-field>
                 </v-col>
@@ -138,46 +77,17 @@
           <v-btn
               color="blue darken-1"
               text
-              @click="dialogs.pro.show = false"
+              @click="dialogs.add_books.show = false"
           >
             取消
           </v-btn>
           <v-btn
               color="blue darken-1"
               text
-              @click="addMyControlData"
+              @click="addBooks"
+              :disabled="ifAdding===false"
           >
-            添加
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog
-        v-model="dialogs.help.show"
-        persistent
-        max-width="290"
-    >
-      <v-card>
-        <v-card-title class="text-h5">
-          帮助
-        </v-card-title>
-        <v-card-text>
-          控制报文：<br/>0xb 0x6 编号 功能码 字节数 XX 0xcc
-        </v-card-text>
-        <v-card-text>
-          响应报文：<br/>0xb 0x7 编号 功能码 字节数 XX 0xcc
-        </v-card-text>
-        <v-card-text>
-          功能码：<br/>1. 读<br/>2. 写<br/>3. 设置阈值<br/>4. 无回复写
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-              color="green darken-1"
-              text
-              @click="dialogs.help.show = false"
-          >
-            好的
+            录入
           </v-btn>
         </v-card-actions>
       </v-card>

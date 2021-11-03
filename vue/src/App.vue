@@ -6,7 +6,7 @@
         absolute
         color="transparent">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title v-show="!drawer">智慧大棚</v-toolbar-title>
+      <v-toolbar-title v-show="!drawer">智慧图书管理系统</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" app>
       <v-sheet class="pa-4 text-center">
@@ -21,7 +21,7 @@
               class="app-logo me-3"></v-img>
           <v-slide-x-transition>
             <h2 class="app-title text--primary">
-              智慧大棚
+              智慧图书
             </h2>
           </v-slide-x-transition>
         </div>

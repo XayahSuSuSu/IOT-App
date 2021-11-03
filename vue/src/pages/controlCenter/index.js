@@ -1,13 +1,14 @@
-import {addControlData, getAllControlData} from "@/api/api";
+import {addBooks, getBooks} from "@/api/api";
 
 export default {
     name: 'ControlCenter',
     data() {
         return {
             search: '',
+            ifAdding: false,
             valid: false,
             dialogs: {
-                pro: {
+                add_books: {
                     show: false,
                     rules: {
                         head: [
@@ -27,71 +28,50 @@ export default {
                         ],
                     },
                     codes: {
-                        head: '11,6',
-                        obj: '3',
+                        head: '',
+                        obj: '',
                         stuff: '2',
                         param: '1,1,6',
-                        tail: '204',
+                        tail: '',
                         show: ''
                     }
                 },
-                help: {
-                    show: false,
-                    rules: {}
-                },
             },
-            paramList: [],
-            headers: [
-                {text: 'ID', value: 'id', align: 'start'},
-                {text: '创建时间', value: 'created_at'},
-                {text: '更新时间', value: 'updated_at'},
-                {text: '协议码', value: 'protocol'},
-                {text: '状态码', value: 'state'},
-                {text: '执行状态', value: 'finished'},
-            ],
-            desserts: [],
         }
     },
     methods: {
-        getAllControlData() {
-            getAllControlData().then(res => {
-                const dataRes = JSON.parse(JSON.stringify(res.data.data))
-                this.desserts = []
-                for (let i = 0; i < dataRes.length; i++) {
-                    this.desserts.push({
-                        id: dataRes[i]['id'],
-                        created_at: dataRes[i]['created_at'],
-                        updated_at: dataRes[i]['updated_at'],
-                        protocol: dataRes[i]['protocol'],
-                        state: dataRes[i]['state'].replace(/ /g, ''),
-                        finished: dataRes[i]['finished'] === 1 ? '已执行' : '未执行',
-                    })
+        getBooks() {
+            getBooks().then(res => {
+                const books_res = JSON.parse(JSON.stringify(res.data.data))
+                console.log(books_res)
+                const books_res_length = books_res.length
+                if (books_res[books_res_length - 1]['name'] === '') {
+                    this.dialogs.add_books.codes.head = books_res[books_res_length - 1]['rfid']
+                    this.ifAdding = true
+                } else {
+                    this.ifAdding = false
                 }
             })
         },
-        addMyControlData() {
-            if (!this.valid) {
-                this.$refs.form.validate()
-            } else {
-                this.dialogs.pro.show = false
-                // [11,6,2,3,3,1,1,6,204]
-                // [11,6,2,3,3,0,1,6,204]
-                addControlData(this.dialogs.pro.codes.show, '').then(() => {
-                    this.getAllControlData()
-                })
+        addBooks() {
+            const data = {
+                rfid: this.dialogs.add_books.codes.head,
+                name: this.dialogs.add_books.codes.tail,
+                place: this.dialogs.add_books.codes.obj,
+                state: '',
+                userid: ''
             }
-        },
-        getCode() {
-            this.paramList = this.dialogs.pro.codes.param.split(',')
-            this.dialogs.pro.codes.show = `[${this.dialogs.pro.codes.head},${this.dialogs.pro.codes.obj},${this.dialogs.pro.codes.stuff},${this.paramList.length},${this.dialogs.pro.codes.param},${this.dialogs.pro.codes.tail}]`
+            addBooks(data).then(res => {
+                const books_res = JSON.parse(JSON.stringify(res.data.data))
+                console.log(books_res)
+            })
         },
     },
     created() {
-        this.getAllControlData()
-        this.getCode()
+        this.getBooks()
         setInterval(() => {
             setTimeout(() => {
-                this.getAllControlData()
+                this.getBooks()
             }, 0)
         }, 1000)
     }

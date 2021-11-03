@@ -6,19 +6,31 @@ HOST = 'db'  # 宿主机地址
 USER = 'root'  # 用户名
 PASSWORD = '123456'  # 密码
 DB = 'iotapp'  # 数据库名
-TABLE_DATA = 'data'  # 数据表名
-TABLE_CONTROL = 'control'  # 数据表名
+TABLE_DATA = 'data'  # 烟雾传感器数据表名
+TABLE_BOOKS = 'books'  # 图书数据表名
+TABLE_USERS = 'users'  # 用户数据表名
+TABLE_ENTERS = 'enters'  # 进入信息数据表名
 
 FIELD_DATA = [
-    "temp float,",
-    "humi float,",
-    "lum float"
+    "smoke1 text,",
+    "smoke2 text",
 ]
 
-FIELD_CONTROL = [
-    "protocol text,",
+FIELD_BOOKS = [
+    "rfid text,",
+    "name text,",
+    "place text,",
     "state text,",
-    "finished tinyint"
+    "userid text",
+]
+
+FIELD_USERS = [
+    "name text,",
+    "userid text",
+]
+
+FIELD_ENTERS = [
+    "userid text",
 ]
 
 
@@ -52,12 +64,26 @@ def init():
         + "created_at timestamp,updated_at timestamp,"
         + field_data
         + ");")
-    # 创建数据表(CONTROL)
-    field_control = "".join(FIELD_CONTROL)
+    # 创建数据表(BOOKS)
+    field_books = "".join(FIELD_BOOKS)
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_CONTROL)
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_BOOKS)
         + "created_at timestamp,updated_at timestamp,"
-        + field_control
+        + field_books
+        + ");")
+    # 创建数据表(USERS)
+    field_users = "".join(FIELD_USERS)
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_USERS)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_users
+        + ");")
+    # 创建数据表(ENTERS)
+    field_enters = "".join(FIELD_ENTERS)
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_ENTERS)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_enters
         + ");")
     db.close()
 
@@ -67,21 +93,13 @@ def insert(table, data):
     db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
-    if table == TABLE_DATA:
-        insert_data = "INSERT INTO {} VALUES (0,'{}','{}'".format(table, timestamp(), timestamp())
-        for i in data:
-            insert_data += ","
-            insert_data += i
-        insert_data += ")"
-        cursor.execute(insert_data)
-    elif table == TABLE_CONTROL:
-        insert_data = "INSERT INTO {} VALUES (0,'{}','{}'".format(table, timestamp(), timestamp())
-        for i in data:
-            insert_data += ",'"
-            insert_data += i
-            insert_data += "'"
-        insert_data += ",0)"
-        cursor.execute(insert_data)
+    insert_data = "INSERT INTO {} VALUES (0,'{}','{}'".format(table, timestamp(), timestamp())
+    for i in data:
+        insert_data += ",'"
+        insert_data += i
+        insert_data += "'"
+    insert_data += ")"
+    cursor.execute(insert_data)
     db.commit()
     db.close()
 
@@ -94,5 +112,26 @@ def update(table, id, state):
     cursor.execute(
         "update {} set finished = {},updated_at = '{}',state = '{}' where id = {}".format(table, 1, timestamp(), state,
                                                                                           id))
+    db.commit()
+    db.close()
+
+
+def delete_useless_books():
+    """删除无用图书"""
+    db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
+    cursor = db.cursor()
+    cursor.execute("use {};".format(DB))
+    cursor.execute("delete from books where name = '';")
+    db.commit()
+    db.close()
+
+
+def sort():
+    db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
+    cursor = db.cursor()
+    cursor.execute("use {};".format(DB))
+    cursor.execute("ALTER TABLE `books` DROP `id`;")
+    cursor.execute("ALTER TABLE `books` ADD `id` int NOT NULL FIRST;")
+    cursor.execute("ALTER TABLE `books` MODIFY COLUMN `id` int NOT NULL AUTO_INCREMENT,ADD PRIMARY KEY(id);")
     db.commit()
     db.close()
