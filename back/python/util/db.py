@@ -116,22 +116,22 @@ def update(table, id, state):
     db.close()
 
 
-def delete_useless_books():
+def delete_useless(table):
     """删除无用图书"""
     db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
-    cursor.execute("delete from books where name = '';")
+    cursor.execute("delete from {} where name = '';".format(table))
     db.commit()
     db.close()
 
 
-def sort():
+def sort(table):
     db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
-    cursor.execute("ALTER TABLE `books` DROP `id`;")
-    cursor.execute("ALTER TABLE `books` ADD `id` int NOT NULL FIRST;")
-    cursor.execute("ALTER TABLE `books` MODIFY COLUMN `id` int NOT NULL AUTO_INCREMENT,ADD PRIMARY KEY(id);")
+    cursor.execute("ALTER TABLE `{}` DROP `id`;".format(table))
+    cursor.execute("ALTER TABLE `{}` ADD `id` int NOT NULL FIRST;".format(table))
+    cursor.execute("ALTER TABLE `{}` MODIFY COLUMN `id` int NOT NULL AUTO_INCREMENT,ADD PRIMARY KEY(id);".format(table))
     db.commit()
     db.close()
