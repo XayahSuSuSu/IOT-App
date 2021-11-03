@@ -54,12 +54,11 @@ export default {
             })
         },
         addBooks() {
+            this.dialogs.add_books.show = false
             const data = {
                 rfid: this.dialogs.add_books.codes.head,
                 name: this.dialogs.add_books.codes.tail,
-                place: this.dialogs.add_books.codes.obj,
-                state: '',
-                userid: ''
+                place: this.dialogs.add_books.codes.obj
             }
             addBooks(data).then(res => {
                 const books_res = JSON.parse(JSON.stringify(res.data.data))
