@@ -1,5 +1,5 @@
 import './requests'
-import {get, post} from '@/api/requests'
+import {get, post, update} from '@/api/requests'
 
 /**
  * 获取图书记录
@@ -13,6 +13,13 @@ export async function getBooks() {
  */
 export async function addBooks(data) {
     return await post('/api/v1/books', data)
+}
+
+/**
+ * 更新图书信息
+ */
+export async function updateBooks(data) {
+    return await update('/api/v1/books', data)
 }
 
 /**
