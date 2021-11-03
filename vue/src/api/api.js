@@ -16,6 +16,13 @@ export async function addBooks(data) {
 }
 
 /**
+ * 获取烟雾数据
+ */
+export async function getData() {
+    return await get('/api/v1/data')
+}
+
+/**
  * 获取控制记录
  */
 export async function getAllControlData() {
