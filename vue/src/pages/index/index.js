@@ -260,8 +260,6 @@ export default {
         },
     },
     created() {
-        this.getBooks()
-        this.getUsers()
         setInterval(() => {
             setTimeout(() => {
                 this.getTenData()
