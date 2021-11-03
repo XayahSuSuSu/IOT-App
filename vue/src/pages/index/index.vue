@@ -135,8 +135,8 @@
                             sm="4"
                         >
                           <v-text-field
-                              v-model="dialogs.add_books.codes.head"
-                              :rules="dialogs.add_books.rules.head"
+                              v-model="dialogs.add_books.codes.rfid"
+                              :rules="dialogs.add_books.rules.rfid"
                               label="图书编码"
                               required
                           ></v-text-field>
@@ -146,8 +146,8 @@
                             sm="4"
                         >
                           <v-text-field
-                              v-model="dialogs.add_books.codes.tail"
-                              :rules="dialogs.add_books.rules.tail"
+                              v-model="dialogs.add_books.codes.name"
+                              :rules="dialogs.add_books.rules.name"
                               label="图书名称"
                               required
                           ></v-text-field>
@@ -157,8 +157,8 @@
                             sm="4"
                         >
                           <v-text-field
-                              v-model="dialogs.add_books.codes.obj"
-                              :rules="dialogs.add_books.rules.obj"
+                              v-model="dialogs.add_books.codes.place"
+                              :rules="dialogs.add_books.rules.place"
                               label="存放位置"
                               required
                           ></v-text-field>

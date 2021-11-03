@@ -66,29 +66,20 @@ export default {
             add_books: {
                 show: false,
                 rules: {
-                    head: [
-                        v => !!v || '请输入包头代码',
+                    rfid: [
+                        v => !!v || '请输入图书编号',
                     ],
-                    obj: [
-                        v => !!v || '请输入对象代码',
+                    name: [
+                        v => !!v || '请输入图书名称',
                     ],
-                    stuff: [
-                        v => !!v || '请输入功能代码',
-                    ],
-                    param: [
-                        v => !!v || '请输入参数代码',
-                    ],
-                    tail: [
-                        v => !!v || '请输入包尾代码',
-                    ],
+                    place: [
+                        v => !!v || '请输入存放位置',
+                    ]
                 },
                 codes: {
-                    head: '',
-                    obj: '',
-                    stuff: '2',
-                    param: '1,1,6',
-                    tail: '',
-                    show: ''
+                    rfid: '',
+                    name: '',
+                    place: '',
                 }
             },
         },
