@@ -147,6 +147,14 @@ export default {
                 if (books_res[books_res_length - 1]['name'] === '') {
                     this.dialogs.add_books.codes.rfid = books_res[books_res_length - 1]['rfid']
                     this.ifAdding = true
+                    for (let i = 0; i < books_res_length - 1; i++) {
+                        if (books_res[books_res_length - 1]['rfid'] === books_res[i]['rfid']) {
+                            this.dialogs.add_books.codes.name = books_res[i]['name']
+                            this.dialogs.add_books.codes.place = books_res[i]['place']
+                            this.ifAdding = false
+                            break
+                        }
+                    }
                 } else {
                     this.ifAdding = false
                 }
@@ -161,6 +169,9 @@ export default {
             }
             addBooks(data).then(res => {
                 const books_res = JSON.parse(JSON.stringify(res.data.data))
+                this.dialogs.add_books.codes.rfid = ''
+                this.dialogs.add_books.codes.name = ''
+                this.dialogs.add_books.codes.place = ''
                 console.log(books_res)
             })
         },
@@ -172,6 +183,13 @@ export default {
                 if (users_res[users_res_length - 1]['name'] === '') {
                     this.dialogs.add_users.codes.rfid = users_res[users_res_length - 1]['userid']
                     this.ifAdding = true
+                    for (let i = 0; i < users_res_length - 1; i++) {
+                        if (users_res[users_res_length - 1]['userid'] === users_res[i]['userid']) {
+                            this.dialogs.add_users.codes.name = users_res[i]['name']
+                            this.ifAdding = false
+                            break
+                        }
+                    }
                 } else {
                     this.ifAdding = false
                 }
@@ -186,6 +204,8 @@ export default {
             }
             addUsers(data).then(res => {
                 const users_res = JSON.parse(JSON.stringify(res.data.data))
+                this.dialogs.add_users.codes.rfid = ''
+                this.dialogs.add_users.codes.name = ''
                 console.log(users_res)
             })
         },
