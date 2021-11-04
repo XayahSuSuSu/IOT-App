@@ -9,7 +9,7 @@ export default {
     components: {VeLine},
     data: () => ({
         chartData: {
-            columns: ['id', 'temp', 'humi', 'lum'],
+            columns: ['id', '温度', '湿度', '光照'],
             rows: []
         },
         stateSwitcher: false,
@@ -69,9 +69,9 @@ export default {
                     if (mLength === 0) {
                         this.chartData.rows.push({
                             'id': dataRes.id.toString(),
-                            'temp': dataRes.temp,
-                            'humi': dataRes.humi,
-                            'lum': dataRes.lum
+                            '温度': dataRes.temp,
+                            '湿度': dataRes.humi,
+                            '光照': dataRes.lum
                         })
                     } else {
                         if (this.chartData.rows[mLength - 1]['id'] !== dataRes.id) {
@@ -80,9 +80,9 @@ export default {
                             }
                             this.chartData.rows.push({
                                 'id': dataRes.id.toString(),
-                                'temp': dataRes.temp,
-                                'humi': dataRes.humi,
-                                'lum': dataRes.lum
+                                '温度': dataRes.temp,
+                                '湿度': dataRes.humi,
+                                '光照': dataRes.lum
                             })
                         }
                     }
@@ -105,18 +105,18 @@ export default {
                         for (let i = 0; i < mLength; i++) {
                             this.chartData.rows.push({
                                 'id': dataRes[i].id.toString(),
-                                'temp': dataRes[i].temp,
-                                'humi': dataRes[i].humi,
-                                'lum': dataRes[i].lum
+                                '温度': dataRes[i].temp,
+                                '湿度': dataRes[i].humi,
+                                '光照': dataRes[i].lum
                             })
                         }
                     } else {
                         for (let i = mLength - 10; i < mLength; i++) {
                             this.chartData.rows.push({
                                 'id': dataRes[i].id.toString(),
-                                'temp': dataRes[i].temp,
-                                'humi': dataRes[i].humi,
-                                'lum': dataRes[i].lum
+                                '温度': dataRes[i].temp,
+                                '湿度': dataRes[i].humi,
+                                '光照': dataRes[i].lum
                             })
                         }
                     }
