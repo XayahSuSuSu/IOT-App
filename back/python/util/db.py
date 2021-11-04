@@ -29,10 +29,6 @@ FIELD_USERS = [
     "userid text",
 ]
 
-FIELD_ENTERS = [
-    "userid text",
-]
-
 
 def timestamp():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -79,11 +75,9 @@ def init():
         + field_users
         + ");")
     # 创建数据表(ENTERS)
-    field_enters = "".join(FIELD_ENTERS)
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_ENTERS)
-        + "created_at timestamp,updated_at timestamp,"
-        + field_enters
+        + "created_at timestamp,updated_at timestamp"
         + ");")
     db.close()
 
@@ -111,10 +105,10 @@ def update(table, rfid, userid_now, userid_history):
     cursor.execute("use {};".format(DB))
     cursor.execute(
         "update {} set userid_now = '{}',userid_history = '{}',updated_at = '{}' where rfid = {}".format(table,
-                                                                                                     userid_now,
-                                                                                                     userid_history,
-                                                                                                     timestamp(),
-                                                                                                     rfid))
+                                                                                                         userid_now,
+                                                                                                         userid_history,
+                                                                                                         timestamp(),
+                                                                                                         rfid))
     db.commit()
     db.close()
 
