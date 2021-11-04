@@ -1,4 +1,4 @@
-import {addBooks, addUsers, getBooks, getData, getUsers, updateBooks} from '@/api/api'
+import {addBooks, addUsers, getBooks, getData, getEnters, getUsers, updateBooks} from '@/api/api'
 import {
     mdiCactus,
     mdiResistorNodes,
@@ -171,7 +171,6 @@ export default {
                     const mLength = dataRes.length
                     this.stateData[0].total = dataRes[mLength - 1].smoke1
                     this.stateData[1].total = dataRes[mLength - 1].smoke2
-                    this.stateData[2].total = 0
                     this.stateData[3].total = new Date().toLocaleTimeString()
                     this.chartData.rows = []
                     if (mLength < 10) {
@@ -180,7 +179,7 @@ export default {
                                 'id': dataRes[i].id.toString(),
                                 '烟雾传感器1': dataRes[i].smoke1,
                                 '烟雾传感器2': dataRes[i].smoke2,
-                                '非法闯入': 0
+                                '非法闯入': this.stateData[2].total
                             })
                         }
                     } else {
@@ -189,10 +188,22 @@ export default {
                                 'id': dataRes[i].id.toString(),
                                 '烟雾传感器1': dataRes[i].smoke1,
                                 '烟雾传感器2': dataRes[i].smoke2,
-                                '非法闯入': 0
+                                '非法闯入': this.stateData[2].total
                             })
                         }
                     }
+                })
+            } else {
+                // this.stateData[3].total = '已停止更新'
+            }
+        },
+        getEnters() {
+            if (this.stateSwitcher) {
+                getEnters().then(res => {
+                    const dataRes = JSON.parse(JSON.stringify(res.data.data))
+                    const mLength = dataRes.length
+                    this.stateData[2].total = dataRes[mLength - 1].created_at
+                    this.chartData.rows[this.chartData.rows.length - 1]['非法闯入'] = this.stateData[2].total = dataRes[mLength - 1].id
                 })
             } else {
                 // this.stateData[3].total = '已停止更新'
@@ -331,6 +342,7 @@ export default {
         setInterval(() => {
             setTimeout(() => {
                 this.getTenData()
+                this.getEnters()
                 if (this.dialogs.add_books.show === true || this.dialogs.borrow_books.show === true || this.dialogs.return_books.show === true) {
                     this.getBooks()
                 }

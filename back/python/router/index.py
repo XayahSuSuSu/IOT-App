@@ -243,6 +243,17 @@ def enters():
                 'message': '成功插入一条数据',
                 'data': []
             }
+        elif request.method == 'GET':
+            enters = _db.get_all('enters')
+            res = {
+                'code': 1,
+                'data': [],
+            }
+            for i in range(len(enters)):
+                enters[i]['created_at'] = enters[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                enters[i]['updated_at'] = enters[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+            res['data'] = enters
+            return res
     except KeyError:
         return {
             'code': -1,

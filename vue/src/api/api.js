@@ -66,3 +66,10 @@ export async function addControlData(protocol) {
         state: ''
     })
 }
+
+/**
+ * 获取非法闯入数据
+ */
+export async function getEnters() {
+    return await get('/api/v1/enters')
+}
