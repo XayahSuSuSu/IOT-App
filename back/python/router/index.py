@@ -164,3 +164,87 @@ def users():
             'code': -1,
             'message': '参数错误',
         }
+
+
+@iot.route('/api/v1/rfid', methods=['GET', 'POST'])
+def rfid():
+    try:
+        if request.method == 'POST':
+            # rfid=xxx
+            form = request.form.to_dict()
+            users = _db.get_all('users')
+            books = _db.get_all('books')
+            type = 'none'
+            for i in range(len(users)):
+                if form['rfid'] == users[i]['userid']:
+                    type = 'users'
+
+            for i in range(len(books)):
+                if form['rfid'] == books[i]['rfid']:
+                    type = 'books'
+
+            if type == 'users':
+                list_data = ['', form['rfid']]
+                _db.delete_useless('users')
+                _db.sort('users')
+                _db.insert('users', list_data)
+            elif type == 'books':
+                list_data = [form['rfid'], '', '', '', '']
+                _db.delete_useless('books')
+                _db.sort('books')
+                _db.insert('books', list_data)
+            else:
+                list_data = ['', form['rfid']]
+                _db.delete_useless('users')
+                _db.sort('users')
+                _db.insert('users', list_data)
+
+                list_data = [form['rfid'], '', '', '', '']
+                _db.delete_useless('books')
+                _db.sort('books')
+                _db.insert('books', list_data)
+
+            return {
+                'code': 1,
+                'message': '成功插入一条数据',
+                'data': form
+            }
+        elif request.method == 'GET':
+            args = request.args.to_dict()
+            users = _db.get_all('users')
+            books = _db.get_all('books')
+            res = {
+                'code': 1,
+                'data': [],
+            }
+            res['data'] = 'none'
+            for i in range(len(users)):
+                if args['rfid'] == users[i]['userid']:
+                    res['data'] = 'users'
+            for i in range(len(books)):
+                if args['rfid'] == books[i]['rfid']:
+                    res['data'] = 'books'
+            return res
+    except KeyError:
+        return {
+            'code': -1,
+            'message': '参数错误',
+        }
+
+
+@iot.route('/api/v1/enters', methods=['GET', 'POST'])
+def enters():
+    try:
+        if request.method == 'POST':
+            list_data = []
+            _db.insert('enters', list_data)
+            return {
+                'code': 1,
+                'message': '成功插入一条数据',
+                'data': []
+            }
+    except KeyError:
+        return {
+            'code': -1,
+            'message': '参数错误',
+        }
