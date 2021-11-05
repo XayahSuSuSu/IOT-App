@@ -259,3 +259,34 @@ def enters():
             'code': -1,
             'message': '参数错误',
         }
+
+
+@iot.route('/api/v1/state', methods=['GET', 'POST'])
+def state():
+    try:
+        if request.method == 'POST':
+            # close=1 | 0
+            form = request.form.to_dict()
+            list_data = [form['state']]
+            _db.insert('state', list_data)
+            return {
+                'code': 1,
+                'message': '成功插入一条数据',
+                'data': form
+            }
+        elif request.method == 'GET':
+            state = _db.get_all('state')
+            res = {
+                'code': 1,
+                'data': [],
+            }
+            for i in range(len(state)):
+                state[i]['created_at'] = state[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                state[i]['updated_at'] = state[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+            res['data'] = state
+            return res
+    except KeyError:
+        return {
+            'code': -1,
+            'message': '参数错误',
+        }

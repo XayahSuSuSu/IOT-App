@@ -10,6 +10,7 @@ TABLE_DATA = 'data'  # 烟雾传感器数据表名
 TABLE_BOOKS = 'books'  # 图书数据表名
 TABLE_USERS = 'users'  # 用户数据表名
 TABLE_ENTERS = 'enters'  # 进入信息数据表名
+TABLE_STATE = 'state'  # 闭馆数据表名
 
 FIELD_DATA = [
     "smoke1 text,",
@@ -27,6 +28,10 @@ FIELD_BOOKS = [
 FIELD_USERS = [
     "name text,",
     "userid text",
+]
+
+FIELD_STATE = [
+    "state text"
 ]
 
 
@@ -78,6 +83,13 @@ def init():
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_ENTERS)
         + "created_at timestamp,updated_at timestamp"
+        + ");")
+    # 创建数据表(STATE)
+    field_state = "".join(FIELD_STATE)
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_DATA)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_state
         + ");")
     db.close()
 
