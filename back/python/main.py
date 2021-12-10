@@ -1,7 +1,10 @@
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+# 允许跨域
+CORS(app, supports_credentials=True)
 
 from router.index import iot
 

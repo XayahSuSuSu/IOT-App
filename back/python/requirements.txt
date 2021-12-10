@@ -3,3 +3,4 @@ pymysql
 gunicorn
 gevent
 cryptography
+flask-cors
