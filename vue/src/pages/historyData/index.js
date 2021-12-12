@@ -1,4 +1,4 @@
-import {getBooks} from "@/api/api";
+import { getData} from "@/api/api";
 
 export default {
     name: 'HistoryData',
@@ -8,11 +8,9 @@ export default {
                 search: '',
                 headers: [
                     {text: '时间', value: 'time', align: 'start'},
-                    {text: 'RFID', value: 'rfid'},
-                    {text: '名称', value: 'name'},
-                    {text: '位置', value: 'place'},
-                    {text: '借阅', value: 'userid_now'},
-                    {text: '历史', value: 'userid_history'},
+                    {text: '箱内温度', value: 'tin'},
+                    {text: '箱外温度', value: 'tout'},
+                    {text: '箱内光照', value: 'lxin'},
                 ],
                 desserts: [],
             },
@@ -35,24 +33,22 @@ export default {
         }
     },
     methods: {
-        getBooks() {
-            getBooks().then(res => {
+        getData() {
+            getData().then(res => {
                 const dataRes = JSON.parse(JSON.stringify(res.data.data))
                 this.books.desserts = []
                 for (let i = 0; i < dataRes.length; i++) {
                     this.books.desserts.push({
                         time: dataRes[i]['created_at'],
-                        rfid: dataRes[i]['rfid'],
-                        name: dataRes[i]['name'],
-                        place: dataRes[i]['place'],
-                        userid_now: dataRes[i]['userid_now'],
-                        userid_history: dataRes[i]['userid_history'],
+                        tin: dataRes[i]['Tin'],
+                        tout: dataRes[i]['Tout'],
+                        lxin: dataRes[i]['LXin'],
                     })
                 }
             })
         },
     },
     created() {
-        this.getBooks()
+        this.getData()
     }
 }

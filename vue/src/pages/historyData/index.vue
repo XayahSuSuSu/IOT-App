@@ -2,7 +2,7 @@
   <v-container>
     <v-card class="v-card-common mt-10 mb-10">
       <v-card-title>
-        图书数据
+        储运箱数据
         <v-spacer></v-spacer>
         <v-text-field
             v-model="books.search"
@@ -17,44 +17,6 @@
           :items="books.desserts"
           :items-per-page="10"
           :search="books.search"
-      ></v-data-table>
-    </v-card>
-    <v-card class="v-card-common mt-10 mb-10">
-      <v-card-title>
-        烟雾数据
-        <v-spacer></v-spacer>
-        <v-text-field
-            v-model="data.search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-        ></v-text-field>
-      </v-card-title>
-      <v-data-table
-          :headers="data.headers"
-          :items="data.desserts"
-          :items-per-page="10"
-          :search="data.search"
-      ></v-data-table>
-    </v-card>
-    <v-card class="v-card-common mt-10 mb-10">
-      <v-card-title>
-        非法闯入
-        <v-spacer></v-spacer>
-        <v-text-field
-            v-model="enters.search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-        ></v-text-field>
-      </v-card-title>
-      <v-data-table
-          :headers="enters.headers"
-          :items="enters.desserts"
-          :items-per-page="10"
-          :search="enters.search"
       ></v-data-table>
     </v-card>
   </v-container>

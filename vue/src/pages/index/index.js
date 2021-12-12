@@ -1,23 +1,24 @@
-import {addBooks, addUsers, getBooks, getData, getEnters, getUsers, updateBooks} from '@/api/api'
 import {
-    mdiCactus,
+    mdiAlarmLight,
     mdiResistorNodes,
     mdiServer,
-    mdiSmoke,
+    mdiSmoke, mdiTemperatureCelsius,
     mdiUpdate
 } from '@mdi/js'
 
 
 import VeLine from 'v-charts/lib/line.common'
+import {addBox, addControlData, addObj, getData, getObj} from "@/api/api";
 
 export default {
     name: 'Index',
     components: {VeLine},
     data: () => ({
         chartData: {
-            columns: ['id', '烟雾传感器1', '烟雾传感器2', '非法闯入'],
+            columns: ['id', '箱内温度', '箱外温度', '箱内光照'],
             rows: []
         },
+        isAdding: false,
         stateSwitcher: false,
         refreshTime: 1000,
         serverData: [
@@ -36,22 +37,16 @@ export default {
         ],
         stateData: [
             {
-                title: '烟雾传感器1',
-                total: 0,
+                title: '储运箱编号',
+                total: 202101,
                 icon: mdiSmoke,
                 color: 'success'
             },
             {
-                title: '烟雾传感器2',
+                title: '储运物品数量',
                 total: 0,
                 icon: mdiSmoke,
                 color: 'primary'
-            },
-            {
-                title: '非法闯入',
-                total: 0,
-                icon: mdiCactus,
-                color: 'warning'
             },
             {
                 title: '更新',
@@ -59,136 +54,103 @@ export default {
                 icon: mdiUpdate,
                 color: 'info'
             },
+            {
+                title: '箱内温度',
+                total: 0,
+                icon: mdiTemperatureCelsius,
+                color: 'success'
+            },
+            {
+                title: '箱外温度',
+                total: 0,
+                icon: mdiTemperatureCelsius,
+                color: 'success'
+            },
+            {
+                title: '箱内光照',
+                total: 0,
+                icon: mdiAlarmLight,
+                color: 'warning'
+            },
         ],
-        ifAdding: false,
-        ifBorrowingBooks: false,
-        ifBorrowingUsers: false,
-        ifReturning: false,
-        valid: false,
-        dialogs: {
-            add_books: {
-                show: false,
-                rules: {
-                    rfid: [
-                        v => !!v || '请输入图书编号',
-                    ],
-                    name: [
-                        v => !!v || '请输入图书名称',
-                    ],
-                    place: [
-                        v => !!v || '请输入存放位置',
-                    ]
-                },
-                codes: {
-                    rfid: '',
-                    name: '',
-                    place: '',
-                }
-            },
-            add_users: {
-                show: false,
-                rules: {
-                    rfid: [
-                        v => !!v || '请输入用户编号',
-                    ],
-                    name: [
-                        v => !!v || '请输入用户名称',
-                    ]
-                },
-                codes: {
-                    rfid: '',
-                    name: '',
-                }
-            },
-            borrow_books: {
-                show: false,
-                rules: {
-                    books: {
-                        rfid: [
-                            v => !!v || '请输入图书编号',
-                        ],
-                        name: [
-                            v => !!v || '请输入图书名称',
-                        ],
-                        place: [
-                            v => !!v || '请输入存放位置',
-                        ],
-                        userid_now: [
-                            v => !!v || '请输入借阅状态',
-                        ]
-                    },
-                    users: {
-                        rfid: [
-                            v => !!v || '请输入用户编号',
-                        ],
-                        name: [
-                            v => !!v || '请输入用户名称',
-                        ]
-                    }
-
-                },
-                codes: {
-                    books: {
-                        rfid: '',
-                        name: '',
-                        place: '',
-                        userid_now: '',
-                        userid: '',
-                        userid_history: '',
-                    },
-                    users: {
-                        rfid: '',
-                        name: '',
-                    }
-                }
-            },
-            return_books: {
-                show: false,
-                rules: {
-                    rfid: [
-                        v => !!v || '请输入图书编号',
-                    ],
-                    name: [
-                        v => !!v || '请输入图书名称',
-                    ],
-                    place: [
-                        v => !!v || '请输入存放位置',
-                    ]
-                },
-                codes: {
-                    rfid: '',
-                    name: '',
-                    place: '',
-                }
-            },
+        dialog_box: {
+            show: false,
+            data: {
+                VID: "202101",
+                TinDH: "",
+                TinDL: "",
+                TG: "",
+                LXD: "",
+                TBegin: "",
+                TEnd: "",
+                VStatus: "",
+            }
         },
+        dialog_obj: {
+            show: false,
+            data: {
+                VID: "202101",
+                PID: "",
+            }
+        },
+        dialog_limit: {
+            show: false,
+            data: {
+                TinDH: "",
+                TinDL: "",
+                TG: "",
+                LXD: "",
+                TBegin: "",
+                TEnd: "",
+            }
+        },
+        valid: false,
     }),
     methods: {
-        getTenData() {
+        addBox() {
+            this.dialog_box.show = false
+            const data = {
+                VID: this.dialog_box.data.VID,
+                TinDH: this.dialog_box.data.TinDH,
+                TinDL: this.dialog_box.data.TinDL,
+                TG: this.dialog_box.data.TG,
+                LXD: this.dialog_box.data.LXD,
+                TBegin: this.dialog_box.data.TBegin,
+                TEnd: this.dialog_box.data.TEnd,
+                VStatus: this.dialog_box.data.VStatus,
+            }
+            addBox(data).then(res => {
+                console.log(data)
+                console.log(res)
+            })
+        },
+        getData() {
             if (this.stateSwitcher) {
+                this.getObj()
                 getData().then(res => {
                     const dataRes = JSON.parse(JSON.stringify(res.data.data))
                     const mLength = dataRes.length
-                    this.stateData[0].total = dataRes[mLength - 1].smoke1
-                    this.stateData[1].total = dataRes[mLength - 1].smoke2
-                    this.stateData[3].total = new Date().toLocaleTimeString()
+                    this.stateData[3].total = dataRes[mLength - 1].Tin
+                    this.stateData[4].total = dataRes[mLength - 1].Tout
+                    this.stateData[5].total = dataRes[mLength - 1].LXin
+                    this.stateData[2].total = new Date().toLocaleTimeString()
                     this.chartData.rows = []
                     if (mLength < 10) {
                         for (let i = 0; i < mLength; i++) {
                             this.chartData.rows.push({
                                 'id': dataRes[i].id.toString(),
-                                '烟雾传感器1': dataRes[i].smoke1,
-                                '烟雾传感器2': dataRes[i].smoke2,
-                                '非法闯入': this.stateData[2].total
+                                '箱内温度': dataRes[i].Tin,
+                                '箱外温度': dataRes[i].Tout,
+                                '箱内光照': dataRes[i].LXin
                             })
                         }
                     } else {
                         for (let i = mLength - 10; i < mLength; i++) {
                             this.chartData.rows.push({
                                 'id': dataRes[i].id.toString(),
-                                '烟雾传感器1': dataRes[i].smoke1,
-                                '烟雾传感器2': dataRes[i].smoke2,
-                                '非法闯入': this.stateData[2].total
+                                '箱内温度': dataRes[i].Tin,
+                                '箱外温度': dataRes[i].Tout,
+                                '箱内光照': dataRes[i].LXin
                             })
                         }
                     }
@@ -197,157 +159,42 @@ export default {
                 // this.stateData[3].total = '已停止更新'
             }
         },
-        getEnters() {
-            if (this.stateSwitcher) {
-                getEnters().then(res => {
-                    const dataRes = JSON.parse(JSON.stringify(res.data.data))
-                    const mLength = dataRes.length
-                    this.stateData[2].total = dataRes[mLength - 1].created_at
-                    this.chartData.rows[this.chartData.rows.length - 1]['非法闯入'] = this.stateData[2].total = dataRes[mLength - 1].id
-                })
-            } else {
-                // this.stateData[3].total = '已停止更新'
-            }
-        },
-        goToHistoryData() {
-            this.$router.push({
-                name: 'HistoryData'
+        addMyControlData() {
+            // [11,6,0,0,6,21,19,2,200,9.0,19.0,204]
+            this.dialog_limit.show = false
+            const code = "[11,6,0,0,6," + this.dialog_limit.data.TinDH + "," + this.dialog_limit.data.TinDL + "," + this.dialog_limit.data.TG + "," + this.dialog_limit.data.LXD + "," + this.dialog_limit.data.TBegin + "," + this.dialog_limit.data.TEnd + ",204]"
+            addControlData(code).then(() => {
+                this.getAllControlData()
             })
         },
-        getBooks() {
-            getBooks().then(res => {
-                const books_res = JSON.parse(JSON.stringify(res.data.data))
-                console.log(books_res)
-                const books_res_length = books_res.length
-                if (books_res[books_res_length - 1]['name'] === '') {
-                    this.dialogs.add_books.codes.rfid = books_res[books_res_length - 1]['rfid']
-                    this.dialogs.return_books.codes.rfid = books_res[books_res_length - 1]['rfid']
-                    this.dialogs.borrow_books.codes.books.rfid = books_res[books_res_length - 1]['rfid']
-                    this.ifAdding = true
-                    this.ifReturning = false
-                    this.ifBorrowingBooks = false
-                    for (let i = 0; i < books_res_length - 1; i++) {
-                        if (books_res[books_res_length - 1]['rfid'] === books_res[i]['rfid']) {
-                            this.dialogs.add_books.codes.name = books_res[i]['name']
-                            this.dialogs.return_books.codes.name = books_res[i]['name']
-                            this.dialogs.borrow_books.codes.books.name = books_res[i]['name']
-                            this.dialogs.add_books.codes.place = books_res[i]['place']
-                            this.dialogs.return_books.codes.place = books_res[i]['place']
-                            this.dialogs.borrow_books.codes.books.place = books_res[i]['place']
-                            this.ifAdding = false
-                            this.ifReturning = true
-                            this.ifBorrowingBooks = true
-
-                            this.dialogs.borrow_books.codes.books.userid = books_res[i]['userid_now']
-                            this.dialogs.borrow_books.codes.books.userid_history = books_res[i]['userid_history']
-
-                            if (books_res[i]['userid_now'] === '') {
-                                this.dialogs.borrow_books.codes.books.userid_now = '未借阅'
-                                this.ifReturning = false
-                            } else {
-                                this.dialogs.borrow_books.codes.books.userid_now = '已借阅'
-                                this.ifBorrowingBooks = false
-                                this.ifReturning = true
-                            }
-                            break
-                        }
-                    }
-                } else {
-                    this.ifAdding = false
-                    this.ifReturning = false
-                    this.ifBorrowingBooks = false
-                }
+        getObj() {
+            getObj().then(res => {
+                const obj_res = JSON.parse(JSON.stringify(res.data.data))
+                const mLength = obj_res.length
+                this.stateData[1].total = mLength
+                this.dialog_obj.data.PID = obj_res[mLength - 1].PID
+                this.stateData[2].total = new Date().toLocaleTimeString()
+                console.log(obj_res)
             })
         },
-        addBooks() {
-            this.dialogs.add_books.show = false
+        addObj() {
+            this.dialog_obj.show = false
             const data = {
-                rfid: this.dialogs.add_books.codes.rfid,
-                name: this.dialogs.add_books.codes.name,
-                place: this.dialogs.add_books.codes.place
+                VID: this.dialog_obj.data.VID,
+                PID: this.dialog_obj.data.PID,
             }
-            addBooks(data).then(res => {
-                const books_res = JSON.parse(JSON.stringify(res.data.data))
-                this.dialogs.add_books.codes.rfid = ''
-                this.dialogs.add_books.codes.name = ''
-                this.dialogs.add_books.codes.place = ''
-                console.log(books_res)
-            })
-        },
-        getUsers() {
-            getUsers().then(res => {
-                const users_res = JSON.parse(JSON.stringify(res.data.data))
-                console.log(users_res)
-                const users_res_length = users_res.length
-                if (users_res[users_res_length - 1]['name'] === '') {
-                    this.dialogs.add_users.codes.rfid = users_res[users_res_length - 1]['userid']
-                    this.dialogs.borrow_books.codes.users.rfid = users_res[users_res_length - 1]['userid']
-                    this.ifAdding = true
-                    this.ifBorrowingUsers = false
-                    for (let i = 0; i < users_res_length - 1; i++) {
-                        if (users_res[users_res_length - 1]['userid'] === users_res[i]['userid']) {
-                            this.dialogs.add_users.codes.name = users_res[i]['name']
-                            this.dialogs.borrow_books.codes.users.name = users_res[i]['name']
-                            this.ifAdding = false
-                            this.ifBorrowingUsers = true
-                            break
-                        }
-                    }
-                } else {
-                    this.ifAdding = false
-                    this.ifBorrowingUsers = false
-                }
-            })
-        },
-        addUsers() {
-            this.dialogs.add_users.show = false
-            const data = {
-                rfid: this.dialogs.add_users.codes.rfid,
-                name: this.dialogs.add_users.codes.name,
-                place: this.dialogs.add_users.codes.place
-            }
-            addUsers(data).then(res => {
-                const users_res = JSON.parse(JSON.stringify(res.data.data))
-                this.dialogs.add_users.codes.rfid = ''
-                this.dialogs.add_users.codes.name = ''
-                console.log(users_res)
-            })
-        },
-        borrowBooks() {
-            this.dialogs.borrow_books.show = false
-            const data = {
-                rfid: this.dialogs.borrow_books.codes.books.rfid,
-                userid_now: this.dialogs.borrow_books.codes.users.rfid,
-                userid_history: this.dialogs.borrow_books.codes.books.userid_history,
-            }
-            updateBooks(data).then(res => {
-                const borrow_res = JSON.parse(JSON.stringify(res.data.data))
-                console.log(borrow_res)
-            })
-        },
-        returnBooks() {
-            this.dialogs.return_books.show = false
-            const data = {
-                rfid: this.dialogs.borrow_books.codes.books.rfid,
-                userid_now: '',
-                userid_history: this.dialogs.borrow_books.codes.books.userid_history + this.dialogs.borrow_books.codes.books.userid + ',',
-            }
-            updateBooks(data).then(res => {
-                const return_res = JSON.parse(JSON.stringify(res.data.data))
-                console.log(return_res)
+            addObj(data).then(() => {
+                this.dialog_obj.data.VID = ''
+                this.dialog_obj.data.PID = ''
             })
         },
     },
     created() {
         setInterval(() => {
             setTimeout(() => {
-                this.getTenData()
-                this.getEnters()
-                if (this.dialogs.add_books.show === true || this.dialogs.borrow_books.show === true || this.dialogs.return_books.show === true) {
-                    this.getBooks()
-                }
-                if (this.dialogs.add_users.show === true || this.dialogs.borrow_books.show === true) {
-                    this.getUsers()
+                this.getData()
+                if (this.dialog_obj.show) {
+                    this.getObj()
                 }
             }, 0)
         }, this.refreshTime)

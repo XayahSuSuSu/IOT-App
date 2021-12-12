@@ -6,7 +6,7 @@
         absolute
         color="transparent">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title v-show="!drawer">智慧图书管理系统</v-toolbar-title>
+      <v-toolbar-title v-show="!drawer">智慧生鲜品储运系统</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" app>
       <v-sheet class="pa-4 text-center">
@@ -21,7 +21,7 @@
               class="app-logo me-3"></v-img>
           <v-slide-x-transition>
             <h2 class="app-title text--primary">
-              智慧图书
+              智慧储运
             </h2>
           </v-slide-x-transition>
         </div>
@@ -48,6 +48,16 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>历史记录</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+              to="/controlCenter"
+              link>
+            <v-list-item-icon>
+              <v-icon>mdi-file</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>控制中心</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>

@@ -11,21 +11,31 @@ def hello_world():
     return "Server is running..."
 
 
-@iot.route('/api/v1/books/check', methods=['GET', 'POST'])
-def books_check():
+@iot.route('/api/v1/box', methods=['GET', 'POST'])
+def box():
     try:
         if request.method == 'POST':
-            # rfid=xxx
+            # VID=xxx&TinDH=&TinDL=&TG=&LXD=&TBegin=&TEnd=&VStatus=
             form = request.form.to_dict()
-            list_data = [form['rfid'], '', '', '', '']
-            _db.delete_useless('books')
-            _db.sort('books')
-            _db.insert('books', list_data)
+            list_data = [form['VID'], form['TinDH'], form['TinDL'], form['TG'], form['LXD'], form['TBegin'],
+                         form['TEnd'], form['VStatus']]
+            _db.insert('box', list_data)
             return {
                 'code': 1,
                 'message': '成功插入一条数据',
                 'data': form
             }
+        elif request.method == 'GET':
+            box = _db.get_all('box')
+            res = {
+                'code': 1,
+                'data': [],
+            }
+            for i in range(len(box)):
+                box[i]['created_at'] = box[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                box[i]['updated_at'] = box[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+            res['data'] = box
+            return res
     except KeyError:
         return {
             'code': -1,
@@ -33,45 +43,35 @@ def books_check():
         }
 
 
-@iot.route('/api/v1/books', methods=['GET', 'POST', 'PUT'])
-def books():
+@iot.route('/api/v1/pid', methods=['GET', 'POST'])
+def pid():
     try:
         if request.method == 'POST':
-            # rfid=xxx&name=&place=
+            # VID=xxx&PID=xxx
             form = request.form.to_dict()
-            list_data = [form['rfid'], form['name'], form['place'], '', '']
-            _db.delete_useless('books')
-            _db.sort('books')
-            _db.insert('books', list_data)
-            return {
-                'code': 1,
-                'message': '成功插入一条数据',
-                'data': form
-            }
-        elif request.method == 'PUT':
-            # rfid=xxx&userid_now=&userid_history=
-            form = request.form.to_dict()
-            _db.delete_useless('books')
-            _db.sort('books')
-            _db.delete_useless('users')
-            _db.sort('users')
-            _db.update('books', form['rfid'], form['userid_now'], form['userid_history'])
-
+            list_data = [form['VID'], form['PID']]
+            pid = _db.get_all('PID')
+            isExist = False
+            for i in pid:
+                if i['PID'] == form['PID']:
+                    isExist = True
+            if not isExist:
+                _db.insert('PID', list_data)
             return {
                 'code': 1,
                 'message': '成功插入一条数据',
                 'data': form
             }
         elif request.method == 'GET':
-            books = _db.get_all('books')
+            data = _db.get_all('PID')
             res = {
                 'code': 1,
                 'data': [],
             }
-            for i in range(len(books)):
-                books[i]['created_at'] = books[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-                books[i]['updated_at'] = books[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
-            res['data'] = books
+            for i in range(len(data)):
+                data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+            res['data'] = data
             return res
     except KeyError:
         return {
@@ -84,9 +84,9 @@ def books():
 def data():
     try:
         if request.method == 'POST':
-            # smoke1=xxx&smoke2=xxx
+            # VID=xxx&Tin=xxx&Tout=xxx&LXin=xxx
             form = request.form.to_dict()
-            list_data = [form['smoke1'], form['smoke2']]
+            list_data = [form['VID'], form['Tin'], form['Tout'], form['LXin']]
             _db.insert('data', list_data)
             return {
                 'code': 1,
@@ -111,119 +111,75 @@ def data():
         }
 
 
-@iot.route('/api/v1/users/check', methods=['GET', 'POST'])
-def users_check():
+@iot.route('/api/v2/polling', methods=['POST'])
+def polling():
     try:
         if request.method == 'POST':
-            # rfid=xxx
+            # null or VID=xxx&Tin=xxx&Tout=xxx&LXin=xxx
             form = request.form.to_dict()
-            list_data = ['', form['rfid']]
-            _db.delete_useless('users')
-            _db.sort('users')
-            _db.insert('users', list_data)
-            return {
-                'code': 1,
-                'message': '成功插入一条数据',
-                'data': form
-            }
-    except KeyError:
-        return {
-            'code': -1,
-            'message': '参数错误',
-        }
-
-
-@iot.route('/api/v1/users', methods=['GET', 'POST'])
-def users():
-    try:
-        if request.method == 'POST':
-            # rfid=xxx&name=
-            form = request.form.to_dict()
-            list_data = [form['name'], form['rfid']]
-            _db.delete_useless('users')
-            _db.sort('users')
-            _db.insert('users', list_data)
-            return {
-                'code': 1,
-                'message': '成功插入一条数据',
-                'data': form
-            }
-        elif request.method == 'GET':
-            users = _db.get_all('users')
+            if form != {}:
+                list_data = [form['VID'], form['Tin'], form['Tout'], form['LXin']]
+                _db.insert('data', list_data)
             res = {
                 'code': 1,
                 'data': [],
             }
-            for i in range(len(users)):
-                users[i]['created_at'] = users[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-                users[i]['updated_at'] = users[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
-            res['data'] = users
+            data = _db.get_all('control')
+            for i in range(len(data)):
+                if data[i]['finished'] == 0:
+                    data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    res['data'].append(data[i])
             return res
     except KeyError:
+        print(KeyError)
         return {
             'code': -1,
             'message': '参数错误',
         }
 
 
-@iot.route('/api/v1/rfid', methods=['GET', 'POST'])
-def rfid():
+@iot.route('/api/v1/control', methods=['GET', 'POST'])
+def control():
     try:
         if request.method == 'POST':
-            # rfid=xxx
+            # protocol=xxx&state=xxx&finished=0
             form = request.form.to_dict()
-            users = _db.get_all('users')
-            books = _db.get_all('books')
-            type = 'none'
-            for i in range(len(users)):
-                if form['rfid'] == users[i]['userid']:
-                    type = 'users'
-
-            for i in range(len(books)):
-                if form['rfid'] == books[i]['rfid']:
-                    type = 'books'
-
-            if type == 'users':
-                list_data = ['', form['rfid']]
-                _db.delete_useless('users')
-                _db.sort('users')
-                _db.insert('users', list_data)
-            elif type == 'books':
-                list_data = [form['rfid'], '', '', '', '']
-                _db.delete_useless('books')
-                _db.sort('books')
-                _db.insert('books', list_data)
-            else:
-                list_data = ['', form['rfid']]
-                _db.delete_useless('users')
-                _db.sort('users')
-                _db.insert('users', list_data)
-
-                list_data = [form['rfid'], '', '', '', '']
-                _db.delete_useless('books')
-                _db.sort('books')
-                _db.insert('books', list_data)
-
+            list_data = list(form.values())
+            _db.insert('control', list_data)
             return {
                 'code': 1,
                 'message': '成功插入一条数据',
                 'data': form
             }
-        elif request.method == 'GET':
+        else:
             args = request.args.to_dict()
-            users = _db.get_all('users')
-            books = _db.get_all('books')
+            data = _db.get_all('control')
+            print(data)
             res = {
                 'code': 1,
                 'data': [],
             }
-            res['data'] = 'none'
-            for i in range(len(users)):
-                if args['rfid'] == users[i]['userid']:
-                    res['data'] = 'users'
-            for i in range(len(books)):
-                if args['rfid'] == books[i]['rfid']:
-                    res['data'] = 'books'
+            if args['get'] == 'all':
+                # /api/v1/control?get=all
+                for i in range(len(data)):
+                    data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                    data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                res['data'] = data
+            if args['get'] == 'todo':
+                # /api/v1/control?get=todo
+                for i in range(len(data)):
+                    if data[i]['finished'] == 0:
+                        data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        res['data'].append(data[i])
+            if args['get'] == 'finished':
+                # /api/v1/control?get=finished
+                for i in range(len(data)):
+                    if data[i]['finished'] == 1:
+                        data[i]['created_at'] = data[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        data[i]['updated_at'] = data[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
+                        res['data'].append(data[i])
             return res
     except KeyError:
         return {
@@ -232,59 +188,19 @@ def rfid():
         }
 
 
-@iot.route('/api/v1/enters', methods=['GET', 'POST'])
-def enters():
+@iot.route('/api/v1/control/finish', methods=['POST'])
+def finish():
     try:
         if request.method == 'POST':
-            list_data = []
-            _db.insert('enters', list_data)
-            return {
-                'code': 1,
-                'message': '成功插入一条数据',
-                'data': []
-            }
-        elif request.method == 'GET':
-            enters = _db.get_all('enters')
-            res = {
-                'code': 1,
-                'data': [],
-            }
-            for i in range(len(enters)):
-                enters[i]['created_at'] = enters[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-                enters[i]['updated_at'] = enters[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
-            res['data'] = enters
-            return res
-    except KeyError:
-        return {
-            'code': -1,
-            'message': '参数错误',
-        }
-
-
-@iot.route('/api/v1/state', methods=['GET', 'POST'])
-def state():
-    try:
-        if request.method == 'POST':
-            # close=1 | 0
+            # id=1&state=[1,2]
             form = request.form.to_dict()
-            list_data = [form['state']]
-            _db.insert('state', list_data)
+            print(form)
+            _db.update('control', form['id'], form['state'])
             return {
                 'code': 1,
-                'message': '成功插入一条数据',
+                'message': '成功更新一条数据',
                 'data': form
             }
-        elif request.method == 'GET':
-            state = _db.get_all('state')
-            res = {
-                'code': 1,
-                'data': [],
-            }
-            for i in range(len(state)):
-                state[i]['created_at'] = state[i]['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-                state[i]['updated_at'] = state[i]['updated_at'].strftime("%Y-%m-%d %H:%M:%S")
-            res['data'] = state
-            return res
     except KeyError:
         return {
             'code': -1,

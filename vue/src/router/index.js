@@ -16,6 +16,12 @@ export default new Router({
             name: 'HistoryData',
             meta: {title: '历史数据'},
             component: () => import('@/pages/historyData/index.vue')
-        }
+        },
+        {
+            path: '/controlCenter',
+            name: 'ControlCenter',
+            meta: {title: '控制中心'},
+            component: () => import('@/pages/controlCenter/index.vue')
+        },
     ]
 })

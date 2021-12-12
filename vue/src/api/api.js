@@ -1,41 +1,34 @@
 import './requests'
 import {get, post, update} from '@/api/requests'
 
-const baseUrl = "http://192.168.2.50:3307"
+const baseUrl = "http://192.168.1.219:3307"
 
 /**
- * 获取图书记录
+ * 获取箱内温度
  */
-export async function getBooks() {
-    return await get(baseUrl + '/api/v1/books')
+export async function getData() {
+    return await get(baseUrl + '/api/v1/data')
 }
 
 /**
- * 添加图书信息
+ * 添加储运箱信息
  */
-export async function addBooks(data) {
-    return await post(baseUrl + '/api/v1/books', data)
+export async function addBox(data) {
+    return await post(baseUrl + '/api/v1/box', data)
 }
 
 /**
- * 更新图书信息
+ * 获取物品记录
  */
-export async function updateBooks(data) {
-    return await update(baseUrl + '/api/v1/books', data)
+export async function getObj() {
+    return await get(baseUrl + '/api/v1/pid')
 }
 
 /**
- * 获取用户记录
+ * 添加物品信息
  */
-export async function getUsers() {
-    return await get(baseUrl + '/api/v1/users')
-}
-
-/**
- * 添加用户信息
- */
-export async function addUsers(data) {
-    return await post(baseUrl + '/api/v1/users', data)
+export async function addObj(data) {
+    return await post(baseUrl + '/api/v1/pid', data)
 }
 
 /**
@@ -45,12 +38,6 @@ export async function updateUsers(data) {
     return await update(baseUrl + '/api/v1/users', data)
 }
 
-/**
- * 获取烟雾数据
- */
-export async function getData() {
-    return await get(baseUrl + '/api/v1/data')
-}
 
 /**
  * 获取控制记录
@@ -65,7 +52,8 @@ export async function getAllControlData() {
 export async function addControlData(protocol) {
     return await post(baseUrl + '/api/v1/control', {
         protocol: protocol,
-        state: ''
+        state: '',
+        finished: 0
     })
 }
 

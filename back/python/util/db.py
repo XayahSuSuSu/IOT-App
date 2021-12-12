@@ -6,32 +6,65 @@ HOST = 'db'  # 宿主机地址
 USER = 'root'  # 用户名
 PASSWORD = '123456'  # 密码
 DB = 'iotapp'  # 数据库名
-TABLE_DATA = 'data'  # 烟雾传感器数据表名
-TABLE_BOOKS = 'books'  # 图书数据表名
-TABLE_USERS = 'users'  # 用户数据表名
-TABLE_ENTERS = 'enters'  # 进入信息数据表名
-TABLE_STATE = 'state'  # 闭馆数据表名
 
+TABLE_VID = 'VID'
+TABLE_PID = 'PID'
+
+TABLE_Tin = 'Tin'
+TABLE_Tout = 'Tout'
+TABLE_LXin = 'LXin'
+
+FIELD_VID = [
+    "VID text",
+]
+
+FIELD_PID = [
+    "VID text,",
+    "PID text",
+]
+
+FIELD_Tin = [
+    "VID text,",
+    "Tin text",
+]
+
+FIELD_Tout = [
+    "VID text,",
+    "Tout text",
+]
+
+FIELD_LXin = [
+    "VID text,",
+    "LXin text",
+]
+
+TABLE_DATA = 'data'
 FIELD_DATA = [
-    "smoke1 text,",
-    "smoke2 text",
+    "VID text,",
+    "Tin text,",
+    "Tout text,",
+    "LXin text",
 ]
 
-FIELD_BOOKS = [
-    "rfid text,",
-    "name text,",
-    "place text,",
-    "userid_now text,",
-    "userid_history text",
+TABLE_BOX = 'box'
+
+FIELD_BOX = [
+    "VID text,",
+    "TinDH text,",
+    "TinDL text,",
+    "TG text,",
+    "LXD text,",
+    "TBegin text,",
+    "TEnd text,",
+    "VStatus text",
 ]
 
-FIELD_USERS = [
-    "name text,",
-    "userid text",
-]
+TABLE_CONTROL = 'control'
 
-FIELD_STATE = [
-    "state text"
+FIELD_CONTROL = [
+    "protocol text,",
+    "state text,",
+    "finished tinyint"
 ]
 
 
@@ -58,6 +91,22 @@ def init():
     cursor.execute("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;".format(DB))
     # 选择数据库
     cursor.execute("use {};".format(DB))
+
+    # 创建数据表(VID)
+    field_vid = "".join(FIELD_VID)
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_VID)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_vid
+        + ");")
+    # 创建数据表(PID)
+    field_pid = "".join(FIELD_PID)
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_PID)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_pid
+        + ");")
+
     # 创建数据表(DATA)
     field_data = "".join(FIELD_DATA)
     cursor.execute(
@@ -65,31 +114,42 @@ def init():
         + "created_at timestamp,updated_at timestamp,"
         + field_data
         + ");")
-    # 创建数据表(BOOKS)
-    field_books = "".join(FIELD_BOOKS)
+
+    # 创建数据表(Tin)
+    field_tin = "".join(FIELD_Tin)
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_BOOKS)
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_Tin)
         + "created_at timestamp,updated_at timestamp,"
-        + field_books
+        + field_tin
         + ");")
-    # 创建数据表(USERS)
-    field_users = "".join(FIELD_USERS)
+    # 创建数据表(Tout)
+    field_tout = "".join(FIELD_Tout)
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_USERS)
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_Tout)
         + "created_at timestamp,updated_at timestamp,"
-        + field_users
+        + field_tout
         + ");")
-    # 创建数据表(ENTERS)
+    # 创建数据表(LXin)
+    field_lxin = "".join(FIELD_LXin)
     cursor.execute(
-        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_ENTERS)
-        + "created_at timestamp,updated_at timestamp"
-        + ");")
-    # 创建数据表(STATE)
-    field_state = "".join(FIELD_STATE)
-    cursor.execute(
-        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_DATA)
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_LXin)
         + "created_at timestamp,updated_at timestamp,"
-        + field_state
+        + field_lxin
+        + ");")
+
+    # 创建数据表(BOX)
+    field_box = "".join(FIELD_BOX)
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_BOX)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_box
+        + ");")
+    # 创建数据表(CONTROL)
+    field_control = "".join(FIELD_CONTROL)
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS {}(id int primary key not null auto_increment,".format(TABLE_CONTROL)
+        + "created_at timestamp,updated_at timestamp,"
+        + field_control
         + ");")
     db.close()
 
@@ -110,19 +170,17 @@ def insert(table, data):
     db.close()
 
 
-def update(table, rfid, userid_now, userid_history):
+def update(table, id, state):
     """更新一条记录"""
     db = pymysql.connect(host=HOST, user=USER, password=PASSWORD, charset='utf8')
     cursor = db.cursor()
     cursor.execute("use {};".format(DB))
     cursor.execute(
-        "update {} set userid_now = '{}',userid_history = '{}',updated_at = '{}' where rfid = {}".format(table,
-                                                                                                         userid_now,
-                                                                                                         userid_history,
-                                                                                                         timestamp(),
-                                                                                                         rfid))
+        "update {} set finished = {},updated_at = '{}',state = '{}' where id = {}".format(table, 1, timestamp(), state,
+                                                                                          id))
     db.commit()
     db.close()
+
 
 
 def delete_useless(table):
